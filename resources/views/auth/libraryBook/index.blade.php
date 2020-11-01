@@ -27,6 +27,9 @@
       <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary mt-3 mb-3">
         Import CSV File
     </button>
+    <button type="button" data-toggle="modal" data-target="#studentBook" class="btn btn-primary mt-3 mb-3">
+       Import Book
+    </button>
     <button type="button" data-toggle="modal" data-target="#addJournal" class="btn btn-primary mt-3 mb-3">
        Add Book
     </button>
@@ -43,6 +46,40 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
     <form action="{{ url('/admin/uploadBookFile') }}" enctype="multipart/form-data" method="POST">
+    @csrf
+      <!-- Modal body -->
+      <div class="modal-body">
+      <div class="form-group">
+      <input type="file" class="form-control form-control-user @error('file') is-invalid @enderror" name="file" id="exampleInputName" >
+        </div>
+      @error('file')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      <input type="submit" class="btn btn-success" name="submit" value="Save">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+ <!-- The Modal -->
+ <div class="modal" id="studentBook">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Upload CSV File</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+    <form action="{{ url('/admin/studentBookFile') }}" enctype="multipart/form-data" method="POST">
     @csrf
       <!-- Modal body -->
       <div class="modal-body">

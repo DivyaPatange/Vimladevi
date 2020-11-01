@@ -10,6 +10,7 @@ use App\Admin\Publication;
 use App\Admin\Seller;
 use App\Admin\RackWing;
 use App\Admin\Department;
+use App\Admin\StudentBook;
 use Session;
 
 class LibraryBookController extends Controller
@@ -273,5 +274,100 @@ class LibraryBookController extends Controller
          
              // Redirect to index
              return redirect('/admin/libraryBook');
+    }
+
+    public function studentBookFile(Request $request)
+    {
+        if ($request->input('submit') != null ){
+
+            // $request->validate([
+            //    'file' => 'required|file',
+            // ]);
+               $file = $request->file('file');
+                // dd($file);
+               // File Details 
+               $filename = $file->getClientOriginalName();
+               $extension = $file->getClientOriginalExtension();
+               $tempPath = $file->getRealPath();
+            //    dd($mimeType);
+               // Valid File Extensions
+               $valid_extension = array("csv");
+         
+               // 2MB in Bytes
+               $maxFileSize = 7097152; 
+         
+               // Check file extension
+               if(in_array(strtolower($extension),$valid_extension)){
+         
+         
+                   // File upload location
+                   $location = 'books';
+         
+                   // Upload file
+                   $file->move($location,$filename);
+         
+                   // Import CSV to Database
+                   $filepath = public_path($location."/".$filename);
+         
+                   // Reading file
+                   $file = fopen($filepath,"r");
+         
+                   $importData_arr = array();
+                   $i = 0;
+                    // dd(fgetcsv($file, 10000, ","));
+                   while (($filedata = fgetcsv($file, 10000, ",")) !== FALSE) {
+                      $num = count($filedata );
+                    //   dd($num);
+                      // Skip first row (Remove below comment if you want to skip the first row)
+                      /*if($i == 0){
+                         $i++;
+                         continue; 
+                      }*/
+                      for ($c=0; $c < $num; $c++) {
+                         $importData_arr[$i][] = $filedata [$c];
+                      }
+                      $i++;
+                   }
+                   fclose($file);
+                //    dd($importData_arr);
+                   // Insert to MySQL database
+                   foreach($importData_arr as $importData){
+                     //   dd($importData[1]);
+                     $insertData = array(
+                        "reg_no" => $importData[0],
+                        "book_code"=>$importData[1],
+                        "book_no"=>$importData[2],
+                        "author_name"=>$importData[3],
+                        "book_name"=>$importData[4],
+                        "price"=>$importData[5],
+                        "publication"=>$importData[6],
+                        "no_of_pages"=>$importData[7],
+                        "seller"=>$importData[8],
+                        "bill_no"=>$importData[9],
+                        "bill_date"=>$importData[10],
+                        "rack_no"=>$importData[11],
+                        "receipt_no"=>$importData[12],
+                        "receipt_date"=>$importData[13],
+                        "scheme"=>$importData[14],
+                        "status"=>$importData[15],
+                        "department"=>$importData[16],
+                        "medium"=>$importData[17],
+                        "remark"=>$importData[18]);
+                     StudentBook::insertData($insertData);
+         
+                   }
+         
+                   Session::flash('success','Import Successful.');
+                 
+         
+               }else{
+                  Session::flash('success','Invalid File Extension.');
+               }
+         
+             }
+         
+             // Redirect to index
+             return redirect('/admin/libraryBook');
+
     }
 }
