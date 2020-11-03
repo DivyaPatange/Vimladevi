@@ -41,8 +41,7 @@
               </span>
               @enderror
             </div>
-            <div class="form-group ">
-                <h5 id="book_name"></h5>
+            <div class="form-group" id="book_name">
             </div>
             <input type="hidden" name="department_id" value="{{ $department->id }}">
             <button type="submit" class="btn btn-primary btn-user btn-block">

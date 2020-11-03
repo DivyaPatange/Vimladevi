@@ -41,12 +41,14 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:admi
     Route::resource('/faculty-bt-card', 'FacultyBTCardController');
     Route::resource('/rack-with-wing', 'RackWingController');
     Route::resource('/libraryBook', 'LibraryBookController');
+    Route::resource('/generalBook', 'GeneralBookController');
     Route::post('/uploadBookFile', 'LibraryBookController@uploadCsvFile');
-    Route::post('/studentBookFile', 'LibraryBookController@studentBookFile');
+    Route::post('/generalBookFile', 'GeneralBookController@generalBookFile');
     Route::resource('/computers', 'ComputerController');
     Route::resource('bookTransaction', 'BookTransactionController');
     Route::get('/studentBTCard', 'BookTransactionController@searchStudentBTCard')->name('searchStudentBTCard');
     Route::get('/searchBookCode', 'BookTransactionController@searchBookCode')->name('searchBookCode');
+    Route::get('/searchGeneralBookCode', 'GeneralBookController@searchGeneralBookCode')->name('searchGeneralBookCode');
     Route::resource('/libraryAccession', 'LibraryAccessionController');
     Route::post('/updateLibraryAccessionTime', 'LibraryAccessionController@updateLibraryAccessionTime')->name('libraryAccession.updatetime');
     Route::get('/studentBookIssueForm/{id}', 'BookTransactionController@studentBookIssueForm')->name('studentBookIssueForm');

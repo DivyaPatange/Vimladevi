@@ -52,6 +52,7 @@ class FacultyBookIssueController extends Controller
     {
         //
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -74,7 +75,7 @@ class FacultyBookIssueController extends Controller
             $date = date('Y/m/d H:i:s');
             if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
             {
-                $increment_date = strtotime("+7 day", strtotime($date));  
+                $increment_date = strtotime("+10 day", strtotime($date));  
                 $expected_date = date("Y-m-d", $increment_date);
                 $issueBook = new FacultyBookIssue();
                 $issueBook->BT_no = $request->BT_no;
@@ -139,43 +140,6 @@ class FacultyBookIssueController extends Controller
         //
     }
 
-    public function facultyRecord(Request $request)
-    {
-        if($request->ajax()) 
-        {
-            // select country name from database
-            $academicYear = AcademicYear::where('id', $request->academic_year)
-                ->first();
-            $data = FacultyBT::where('session', $academicYear->id)->get();
-            // dd($data);        
-        
-            // declare an empty array for output
-            $output = '';
-            if (count($data)>0) {
-                // concatenate output to the array
-                // loop through the result array
-                foreach ($data as $key => $row){
-                       $output .= '<tr>'. 
-                       '<td>'.++$key.'</td>'.
-                       '<td>'.$row->BT_no.'</td>'. 
-                       '<td>'.$row->name.'</td>'. 
-                       '<td>'.'<button data-id="'.$row->id.'" class="btn issueBook btn-info btn-circle">
-                       <i class="fas fa-eye"></i>
-                     </button></td>'.
-                       '</tr>';
-                    
-                }
-                // end of output
-            }
-            
-            else {
-                // if there's no matching results according to the input
-                $output .= 'No results';
-            }
-            // return output result array
-            return $output;
-        }
-    }
 
     public function facultyBookIssueSubmit(Request $request)
     {
@@ -239,7 +203,7 @@ class FacultyBookIssueController extends Controller
         $bookBank = FacultyBookIssue::where('id', $request->issueID)->update([
             'actual_return_date' => $request->return_date,
             'book_condition' => $book_status,
-            'penalty' => ($penaltyPoor + $penaltyMissing + $penaltyA + $penaltyG + ($penaltyArray * 2)),
+            'penalty' => ($penaltyPoor + $penaltyMissing + $penaltyA + $penaltyG + ($penaltyArray * 3)),
         ]);
         $facultyBookReturn = FacultyBookIssue::where('id', $request->issueID)->first();
         if($facultyBookReturn->actual_return_date)
@@ -258,7 +222,7 @@ class FacultyBookIssueController extends Controller
         }
         $lastIssueBook = end($array);
         $date = date('Y/m/d H:i:s');
-        $increment_date = strtotime("+7 day", strtotime($date));  
+        $increment_date = strtotime("+10 day", strtotime($date));  
         $expected_date = date("Y-m-d", $increment_date);
         $renewBook = new FacultyBookIssueDate();
         $renewBook->faculty_book_issue_id = $issueBook->id;

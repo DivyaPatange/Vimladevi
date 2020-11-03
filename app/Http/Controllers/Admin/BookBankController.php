@@ -33,13 +33,19 @@ class BookBankController extends Controller
                 // dd($data);
             }
             return datatables()->of($data)
+            ->addColumn('course_name', function($row){
+                return $row->course->course_name;
+            })
+            ->addColumn('department', function(StudentBT $studentBT){
+                return $studentBT->departments->department;
+            })
             ->addColumn('action', function($data){
                     $button = '<button data-id="'.$data->id.'" class="btn issueBook btn-info btn-circle">
                     <i class="fas fa-eye"></i>
                   </button>';
                 return $button;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'course_name', 'department'])
             ->addIndexColumn()
             ->make(true);
         }
@@ -179,7 +185,7 @@ class BookBankController extends Controller
         {
             $diff = strtotime($date2) - strtotime($date1); 
             $days = abs(round($diff / 86400));
-            $penaltyDays = 2 * $days;
+            $penaltyDays = 3 * $days;
         }
         else{
             $penaltyDays = 0;

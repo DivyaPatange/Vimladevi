@@ -56,9 +56,7 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
-                      <label></label>
-                        <h5 id="student_name"></h5>
+                    <div class="form-group" id="student_name">
                     </div>
                 </div>
             </div>
@@ -102,6 +100,9 @@
               <th>Sr. No.</th>
               <th>BT Card No.</th>
               <th>Student Name</th>
+              <th>Class</th>
+              <th>Class Year</th>
+              <th>Department</th>
               <th>Issue Book</th>
           </thead>
           <tfoot>
@@ -109,6 +110,9 @@
             <th>Sr. No.</th>
             <th>BT Card No.</th>
             <th>Student Name</th>
+            <th>Class</th>
+              <th>Class Year</th>
+              <th>Department</th>
             <th>Issue Book</th>
             </tr>
           </tfoot>
@@ -171,6 +175,9 @@ $(document).ready(function(){
     { data: 'id', name: 'id' },
     { data: 'BT_no', name: 'BT_no' },
     { data: 'name', name: 'name' },
+    { data: 'course_name', name: 'course_name' },
+    { data: 'class_year', name: 'class_year' },
+    { data: 'department', name: 'department' },
     {data: 'action', name: 'action', orderable: false},
     ],
     order: [[0, 'asc']],

@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Admin\LibraryBook;
+use App\Admin\StudentBook;
 use App\Admin\Author;
 use App\Admin\Publication;
 use App\Admin\Seller;
 use App\Admin\RackWing;
 use App\Admin\Department;
-use Session;
 
-class LibraryBookController extends Controller
+class GeneralBookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,8 +25,8 @@ class LibraryBookController extends Controller
         $seller = Seller::all();
         $rackWing = RackWing::all();
         $department = Department::all();
-        $libraryBook = LibraryBook::all();
-        return view('auth.libraryBook.index', compact('libraryBook', 'author', 'publication', 'seller', 'rackWing', 'department'));
+        $generalBook = StudentBook::all();
+        return view('auth.generalBook.index', compact('generalBook', 'author', 'publication', 'seller', 'rackWing','department'));
     }
 
     /**
@@ -65,7 +64,7 @@ class LibraryBookController extends Controller
             'department' => 'required',
             'medium' => 'required',
         ]);
-        $libraryBook = new LibraryBook();
+        $libraryBook = new StudentBook();
         $libraryBook->reg_no = $request->reg_no;
         $libraryBook->book_code = $request->book_code;
         $libraryBook->book_no = $request->book_no;
@@ -86,7 +85,7 @@ class LibraryBookController extends Controller
         $libraryBook->medium = $request->medium;
         $libraryBook->remark = $request->remark;
         $libraryBook->save();
-        return redirect('/admin/libraryBook')->with('success', 'Library Book added successfully!');
+        return redirect('/admin/generalBook')->with('success', 'Book added successfully!');
     }
 
     /**
@@ -108,13 +107,13 @@ class LibraryBookController extends Controller
      */
     public function edit($id)
     {
-        $libraryBook = LibraryBook::findorfail($id);
+        $generalBook = StudentBook::findorfail($id);
         $author = Author::all();
         $publication = Publication::all();
         $seller = Seller::all();
         $rackWing = RackWing::all();
         $department = Department::all();
-        return view('auth.libraryBook.edit', compact('libraryBook', 'author', 'publication', 'seller', 'rackWing', 'department'));
+        return view('auth.generalBook.edit', compact('generalBook', 'author', 'publication', 'seller', 'department', 'rackWing'));
     }
 
     /**
@@ -143,7 +142,7 @@ class LibraryBookController extends Controller
             'department' => 'required',
             'medium' => 'required',
         ]);
-        $libraryBook = LibraryBook::findorfail($id);
+        $libraryBook = StudentBook::findorfail($id);
         // dd($libraryBook);
         $libraryBook->reg_no = $request->reg_no;
         $libraryBook->book_code = $request->book_code;
@@ -165,7 +164,7 @@ class LibraryBookController extends Controller
         $libraryBook->medium = $request->medium;
         $libraryBook->remark = $request->remark;
         $libraryBook->update($request->all());
-        return redirect('/admin/libraryBook')->with('success', 'Library Book updated successfully!');
+        return redirect('/admin/generalBook')->with('success', 'Book updated successfully!');
     }
 
     /**
@@ -176,69 +175,67 @@ class LibraryBookController extends Controller
      */
     public function destroy($id)
     {
-        $libraryBook = LibraryBook::findorfail($id);
-        $libraryBook->delete();
-        return redirect('/admin/libraryBook')->with('success', 'Library Book deleted successfully! ');
+        $generalBook = StudentBook::findorfail($id);
+        $generalBook->delete();
+        return redirect('/admin/generalBook')->with('success', 'Book Record Deleted Successfully!');
     }
 
-    public function uploadCsvFile(Request $request)
+    public function generalBookFile(Request $request)
     {
-        if ($request->input('submit') != null ){
-
-            // $request->validate([
-            //    'file' => 'required|file',
-            // ]);
-               $file = $request->file('file');
-                // dd($file);
-               // File Details 
-               $filename = $file->getClientOriginalName();
-               $extension = $file->getClientOriginalExtension();
-               $tempPath = $file->getRealPath();
+        if ($request->input('submit') != null )
+        {
+            $file = $request->file('file');
+            // dd($file);
+            // File Details 
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $tempPath = $file->getRealPath();
             //    dd($mimeType);
-               // Valid File Extensions
-               $valid_extension = array("csv");
+            // Valid File Extensions
+            $valid_extension = array("csv");
          
-               // 2MB in Bytes
-               $maxFileSize = 7097152; 
+            // 2MB in Bytes
+            $maxFileSize = 7097152; 
          
-               // Check file extension
-               if(in_array(strtolower($extension),$valid_extension)){
-         
-         
-                   // File upload location
-                   $location = 'books';
-         
-                   // Upload file
-                   $file->move($location,$filename);
-         
-                   // Import CSV to Database
-                   $filepath = public_path($location."/".$filename);
-         
-                   // Reading file
-                   $file = fopen($filepath,"r");
-         
-                   $importData_arr = array();
-                   $i = 0;
-                    // dd(fgetcsv($file, 10000, ","));
-                   while (($filedata = fgetcsv($file, 10000, ",")) !== FALSE) {
-                      $num = count($filedata );
+            // Check file extension
+            if(in_array(strtolower($extension),$valid_extension))
+            {
+                // File upload location
+                $location = 'books';
+        
+                // Upload file
+                $file->move($location,$filename);
+        
+                // Import CSV to Database
+                $filepath = public_path($location."/".$filename);
+        
+                // Reading file
+                $file = fopen($filepath,"r");
+        
+                $importData_arr = array();
+                $i = 0;
+                // dd(fgetcsv($file, 10000, ","));
+                while (($filedata = fgetcsv($file, 10000, ",")) !== FALSE) 
+                {
+                    $num = count($filedata );
                     //   dd($num);
-                      // Skip first row (Remove below comment if you want to skip the first row)
-                      /*if($i == 0){
-                         $i++;
-                         continue; 
-                      }*/
-                      for ($c=0; $c < $num; $c++) {
-                         $importData_arr[$i][] = $filedata [$c];
-                      }
-                      $i++;
-                   }
-                   fclose($file);
+                    // Skip first row (Remove below comment if you want to skip the first row)
+                    /*if($i == 0){
+                        $i++;
+                        continue; 
+                    }*/
+                    for ($c=0; $c < $num; $c++) {
+                        $importData_arr[$i][] = $filedata [$c];
+                    }
+                    $i++;
+                }
+                fclose($file);
                 //    dd($importData_arr);
-                   // Insert to MySQL database
-                   foreach($importData_arr as $importData){
-                     //   dd($importData[1]);
-                     $insertData = array(
+                // Insert to MySQL database
+                foreach($importData_arr as $importData)
+                {
+                    //   dd($importData[1]);
+                    $insertData = array(
                         "reg_no" => $importData[0],
                         "book_code"=>$importData[1],
                         "book_no"=>$importData[2],
@@ -258,21 +255,61 @@ class LibraryBookController extends Controller
                         "department"=>$importData[16],
                         "medium"=>$importData[17],
                         "remark"=>$importData[18]);
-                     LibraryBook::insertData($insertData);
-         
-                   }
-         
-                   Session::flash('success','Import Successful.');
-                 
-         
-               }else{
-                  Session::flash('success','Invalid File Extension.');
-               }
-         
-             }
-         
-             // Redirect to index
-             return redirect('/admin/libraryBook');
+                    StudentBook::insertData($insertData);
+                }
+                Session::flash('success','Import Successful.');
+            }
+            else
+            {
+                Session::flash('success','Invalid File Extension.');
+            }
+        }
+        // Redirect to index
+        return redirect('/admin/generalBook');
     }
 
+    public function searchGeneralBookCode(Request $request)
+    {
+        if($request->ajax()) {
+            // select country name from database
+            $data = StudentBook::where('book_no', 'LIKE', $request->general_book_code.'%')
+                ->get();
+                
+        
+            // declare an empty array for output
+            $output = '';
+            // if searched countries count is larager than zero
+            // dd(!(isset($data)) || empty($data));
+            if(!(isset($data)) || empty($data))
+                {
+                    return array("error","Please Enter Valid Referral Code");
+                }
+            if (count($data)>0) {
+                // concatenate output to the array
+                // loop through the result array
+                foreach ($data as $row){
+                    // dd($request->user_referral_info == $row->referral_code);
+                    if($request->general_book_code == $row->book_no){
+                    // concatenate output to the array
+                    // $parentName = User::where('id', $row->parent_id)->first();
+
+                       $output .= '<p><b>Book Name:- </b>'.$row->book_name.'</p>'. 
+                       '<p><b>Author Name:- </b>'.$row->author_name.'</p>'. 
+                       '<p><b>Publication:- </b>'.$row->publication.'</p>'. 
+                       '<p><b>Department:- </b>'.$row->department.'</p>';
+                        
+                        
+                    }
+                }
+                // end of output
+            }
+            
+            else {
+                // if there's no matching results according to the input
+                $output .= '<p class="text-danger">No results</p>';
+            }
+            // return output result array
+            return $output;
+        }
+    }
 }

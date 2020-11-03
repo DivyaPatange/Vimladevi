@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Admin\BookTransaction;
 use App\Admin\StudentBT;
 use App\Admin\LibraryBook;
+use App\Admin\Course;
+use App\Admin\Department;
 use App\Admin\AcademicYear;
 use App\Admin\StudentBookIssue;
 use App\Admin\StudentBookIssueDate;
@@ -32,17 +34,21 @@ class BookTransactionController extends Controller
               
                 $data = DB::table('book_transactions')
                 ->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'book_transactions.BT_no')
-                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session')->where('student_b_t_s.session', $request->academic)->get();
+                ->join('courses', 'courses.id', '=', 'student_b_t_s.class')
+                ->join('departments', 'departments.id', '=', 'student_b_t_s.department')
+                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session', 'student_b_t_s.class_year', 'courses.course_name', 'departments.department')->where('student_b_t_s.session', $request->academic)->get();
             }
             else{
                 $data = DB::table('book_transactions')
                 ->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'book_transactions.BT_no')
-                ->select('book_transactions.*', 'student_b_t_s.name');
+                ->join('courses', 'courses.id', '=', 'student_b_t_s.class')
+                ->join('departments', 'departments.id', '=', 'student_b_t_s.department')
+                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session', 'student_b_t_s.class_year', 'courses.course_name', 'departments.department');
                 // dd($data);
             }
             return datatables()->of($data)
             ->addColumn('action', 'auth.bookTransaction.action')
-            ->rawColumns(['name', 'action'])
+            ->rawColumns(['name', 'action', 'class_year', 'course_name', 'department'])
             ->addIndexColumn()
             ->make(true);
         }
@@ -166,8 +172,12 @@ class BookTransactionController extends Controller
                     // concatenate output to the array
                     // $parentName = User::where('id', $row->parent_id)->first();
 
-                    
-                       $output .= $row->name;
+                        $class = Course::where('id', $row->class)->first();
+                        $department = Department::where('id', $row->department)->first();
+                       $output .= '<p><b>Student Name:- </b>'.$row->name.'</p>'. 
+                       '<p><b>Class:- </b>'.$class->course_name.'</p>'. 
+                       '<p><b>Class Year:- </b>'.$row->class_year.'</p>'. 
+                       '<p><b>Department:- </b>'.$department->department.'</p>';
                         
                         
                     }
@@ -209,8 +219,10 @@ class BookTransactionController extends Controller
                     // concatenate output to the array
                     // $parentName = User::where('id', $row->parent_id)->first();
 
-                    
-                       $output .= $row->book_name;
+                       $output .= '<p><b>Book Name:- </b>'.$row->book_name.'</p>'. 
+                       '<p><b>Author Name:- </b>'.$row->author_name.'</p>'. 
+                       '<p><b>Publication:- </b>'.$row->publication.'</p>'. 
+                       '<p><b>Department:- </b>'.$row->department.'</p>';
                         
                         
                     }
@@ -220,7 +232,7 @@ class BookTransactionController extends Controller
             
             else {
                 // if there's no matching results according to the input
-                $output .= 'No results';
+                $output .= '<p class="text-danger">No results</p>';
             }
             // return output result array
             return $output;
@@ -248,12 +260,13 @@ class BookTransactionController extends Controller
                 $date = date('Y/m/d H:i:s');
                 if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
                 {
-                    $increment_date = strtotime("+7 day", strtotime($date));
+                    $increment_date = strtotime("+10 day", strtotime($date));
                     $expected_date = date("Y-m-d", $increment_date);
                     // $bookTransaction->book_code = $request->book_code;
                     $issueBook = new StudentBookIssue();
                     $issueBook->bookTransaction_id = $request->BT_id;
                     $issueBook->book_no = $request->book_code;
+                    $issueBook->category = $request->category;
                     $issueBook->status = 1;
                     $issueBook->save();
                     if($issueBook->save())
@@ -338,7 +351,7 @@ class BookTransactionController extends Controller
         $bookTransaction = StudentBookIssue::where('id', $request->issueID)->update([
             'actual_return_date' => $request->return_date,
             'book_status' => $book_status,
-            'penalty' => ($penaltyA + $penaltyG + $penaltyPoor + $penaltyMissing + ($penaltyArray * 2)),
+            'penalty' => ($penaltyA + $penaltyG + $penaltyPoor + $penaltyMissing + ($penaltyArray * 3)),
         ]);
         $studentBookReturn = StudentBookIssue::where('id', $request->issueID)->first();
         if($studentBookReturn->actual_return_date)
@@ -347,44 +360,7 @@ class BookTransactionController extends Controller
         }
     }
 
-    public function bookTransactionRecord(Request $request)
-    {
-        if($request->ajax()) 
-        {
-            // select country name from database
-            $academicYear = AcademicYear::where('id', $request->academic_year)
-                ->first();
-            $data = BookTransaction::whereBetween('created_at', [$academicYear->from_academic_year, $academicYear->to_academic_year])->get();
-            // dd($data);        
-        
-            // declare an empty array for output
-            $output = '';
-            if (count($data)>0) {
-                // concatenate output to the array
-                // loop through the result array
-                foreach ($data as $key => $row){
-                    $studentBT = StudentBT::where('BT_no', $row->BT_no)->first();
-                       $output .= '<tr>'. 
-                       '<td>'.++$key.'</td>'.
-                       '<td>'.$row->BT_no.'</td>'. 
-                       '<td>'.$studentBT->name.'</td>'. 
-                       '<td>'.'<button data-id="'.$row->id.'" class="btn issueBook btn-info btn-circle">
-                       <i class="fas fa-eye"></i>
-                     </button></td>'.
-                       '</tr>';
-                    
-                }
-                // end of output
-            }
-            
-            else {
-                // if there's no matching results according to the input
-                $output .= 'No results';
-            }
-            // return output result array
-            return $output;
-        }
-    }
+   
 
 
     public function studentBookRenew(Request $request)
@@ -397,7 +373,7 @@ class BookTransactionController extends Controller
         }
         $lastIssueBook = end($array);
         $date = date('Y/m/d H:i:s');
-        $increment_date = strtotime("+7 day", strtotime($date));  
+        $increment_date = strtotime("+10 day", strtotime($date));  
         $expected_date = date("Y-m-d", $increment_date);
         $renewBook = new StudentBookIssueDate();
         $renewBook->student_book_issue_id = $issueBook->id;

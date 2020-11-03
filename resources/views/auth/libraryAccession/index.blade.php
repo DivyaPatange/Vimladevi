@@ -42,8 +42,7 @@
                                     </span>
                                     @enderror
                                 </div>
-                                <div class="form-group ">
-                                   <h5 id="student_name"></h5>
+                                <div class="form-group " id="student_name">
                                 </div>
                                     <div class="form-group ">
                                         <label>.</label>
