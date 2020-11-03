@@ -22,54 +22,8 @@
   @endif
   <!-- Page Heading -->
   <h1 class="h3 mb-2 text-gray-800">Student Book Issue</h1>
-  <div class="row justify-content-center">
-    <div class="col-lg-12">
-      <!-- Basic Card Example -->
-      <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary mt-3 mb-3">
-        Pustak Pedhi
-      </button>
-      <button type="button" data-toggle="modal" data-target="#addJournal" class="btn btn-primary mt-3 mb-3">
-        General Book
-      </button>
-    </div>
-  </div>
-   <!-- The Modal -->
-<div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Issue Book</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <form action="{{ route('admin.studentBookIssueForm.submit') }}" enctype="multipart/form-data" method="POST">
-      @csrf
-      <!-- Modal body -->
-        <div class="modal-body">
-          <div class="form-group ">
-            <label>Book Code</label>
-            <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
-            @error('book_code')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <input type="hidden" name="category" value="p">
-          <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
-          <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
-          <div class="form-group " id="book_name">
-          </div>
-        </div>
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+  
+  
 <div class="modal" id="addJournal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -104,6 +58,90 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">General Book</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  <div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+      <!-- Basic Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          Issue Book
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
+          @csrf 
+            <div class="form-group ">
+            <label>Book Code</label>
+            <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+            @error('book_code')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+            </div>
+            <div class="form-group" id="book_name">
+                
+            </div>
+            <input type="hidden" name="category" value="p">
+            <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
+            <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
+            <button type="submit" class="btn btn-primary btn-user btn-block">
+              Add
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  <div class="row justify-content-center mt-5">
+    <div class="col-lg-6">
+      <!-- Basic Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          Issue Book
+        </div>
+        <div class="card-body">
+          <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
+          @csrf 
+            <div class="form-group ">
+            <label>Book Code</label>
+            <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="general_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+            @error('book_code')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+            </div>
+            <div class="form-group" id="general_book_name">
+                
+            </div>
+            <input type="hidden" name="category" value="g">
+            <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
+            <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
+
+            <button type="submit" class="btn btn-primary btn-user btn-block">
+              Add
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
   </div>
 </div>
   <!-- DataTales Example -->
