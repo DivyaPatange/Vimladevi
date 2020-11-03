@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 01, 2020 at 01:45 PM
--- Server version: 5.7.26
--- PHP Version: 7.2.18
+-- Generation Time: Nov 03, 2020 at 12:04 PM
+-- Server version: 10.4.10-MariaDB
+-- PHP Version: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -59,7 +59,15 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `authors`
+--
+
+INSERT INTO `authors` (`id`, `author_name`, `created_at`, `updated_at`) VALUES
+(1, 'ayodhya prasad achal', '2020-11-03 01:02:03', '2020-11-03 01:02:03'),
+(2, 'drushtartha shalyatantram 1', '2020-11-03 01:04:33', '2020-11-03 01:04:33');
 
 -- --------------------------------------------------------
 
@@ -107,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `book_banks` (
 
 INSERT INTO `book_banks` (`id`, `book_no`, `BT_no`, `issue_date`, `expected_return_date`, `actual_return_date`, `book_condition`, `penalty`, `created_at`, `updated_at`) VALUES
 (1, '2', 'BTS517374', '2020-10-18', '2021-10-18', '2020-10-29', 'poor', '67.5', '2020-10-18 05:58:44', '2020-10-18 11:18:18'),
-(2, '7', 'BTS517374', '2020-10-18', '2021-10-18', '2020-10-31', 'good', '0', '2020-10-18 06:41:23', '2020-10-18 11:17:52');
+(2, '7', 'BTS517374', '2020-10-18', '2021-10-18', '2021-11-01', 'good', '42', '2020-10-18 06:41:23', '2020-11-03 03:59:30');
 
 -- --------------------------------------------------------
 
@@ -224,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `departments` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `departments`
@@ -232,7 +240,9 @@ CREATE TABLE IF NOT EXISTS `departments` (
 
 INSERT INTO `departments` (`id`, `department`, `created_at`, `updated_at`) VALUES
 (1, 'BAMS', '2020-10-13 10:25:57', '2020-10-13 10:25:57'),
-(2, 'Ayurved', '2020-10-13 10:26:38', '2020-10-13 10:26:38');
+(2, 'Ayurved', '2020-10-13 10:26:38', '2020-10-13 10:26:38'),
+(3, 'strirog and prasuti tantra', '2020-11-03 01:06:49', '2020-11-03 01:06:49'),
+(4, 'KAYCHIKITSA', '2020-11-03 01:08:27', '2020-11-03 01:08:27');
 
 -- --------------------------------------------------------
 
@@ -343,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
   `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -418,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `library_books` (
   `department` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `medium` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remark` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `book_status` int(11) NOT NULL DEFAULT '1',
+  `book_status` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -431,11 +441,11 @@ CREATE TABLE IF NOT EXISTS `library_books` (
 INSERT INTO `library_books` (`id`, `reg_no`, `book_code`, `book_no`, `author_name`, `book_name`, `price`, `publication`, `no_of_pages`, `seller`, `bill_no`, `bill_date`, `rack_no`, `receipt_no`, `receipt_date`, `scheme`, `status`, `department`, `medium`, `remark`, `book_status`, `created_at`, `updated_at`) VALUES
 (1, '1', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '1', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '123', 0, NULL, '2020-10-18 12:05:13'),
 (2, '2', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '2', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '2', 0, NULL, '2020-10-19 09:18:45'),
-(3, '3', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '3', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '1', 1, NULL, NULL),
+(3, '3', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '3', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '1', 0, NULL, '2020-11-03 06:22:38'),
 (4, '4', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '4', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '22', 1, NULL, NULL),
 (5, '5', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '5', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '324', 1, NULL, NULL),
 (6, '6', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '6', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '4', 1, NULL, NULL),
-(7, '7', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '7', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '2', 1, NULL, '2020-10-18 11:17:52'),
+(7, '7', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '7', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '2', 1, NULL, '2020-11-03 03:59:30'),
 (8, '8', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '8', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '2', 1, NULL, NULL),
 (9, '9', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '9', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '2', 1, NULL, NULL),
 (10, '10', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '10', 'Dr. Subash Ranade', 'Vaidyakiya Subhashit Sahitya and Vaidyakam', '135', 'Chokamba Prakashan', '184', 'varanasi', 'CR 656', '5/27/2019', '36', 'CR 656', '5/27/2019', 'Pustak Pedhi', 'Available', 'Samhita siddhant ', 'Marathi', '2', 1, NULL, NULL),
@@ -2210,7 +2220,15 @@ CREATE TABLE IF NOT EXISTS `publications` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `publications`
+--
+
+INSERT INTO `publications` (`id`, `publication_name`, `created_at`, `updated_at`) VALUES
+(1, 'chuakhambasurbharti prakashn', '2020-11-03 00:55:49', '2020-11-03 00:55:49'),
+(2, 'godavari publishers', '2020-11-03 00:57:54', '2020-11-03 00:57:54');
 
 -- --------------------------------------------------------
 
@@ -2296,7 +2314,14 @@ CREATE TABLE IF NOT EXISTS `sellers` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sellers`
+--
+
+INSERT INTO `sellers` (`id`, `seller_name`, `created_at`, `updated_at`) VALUES
+(1, 'Nagpur', '2020-11-03 01:00:01', '2020-11-03 01:00:01');
 
 -- --------------------------------------------------------
 
@@ -2326,11 +2351,11 @@ CREATE TABLE IF NOT EXISTS `student_books` (
   `department` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `medium` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remark` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `book_status` tinyint(1) NOT NULL DEFAULT '1',
+  `book_status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6474 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6475 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `student_books`
@@ -8855,24 +8880,24 @@ CREATE TABLE IF NOT EXISTS `student_book_issues` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `bookTransaction_id` int(10) UNSIGNED NOT NULL,
   `book_no` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `issue_date` date NOT NULL,
-  `expected_return_date` date NOT NULL,
+  `category` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `actual_return_date` date DEFAULT NULL,
   `book_status` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `penalty` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `student_book_issues_booktransaction_id_foreign` (`bookTransaction_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `student_book_issues`
 --
 
-INSERT INTO `student_book_issues` (`id`, `bookTransaction_id`, `book_no`, `issue_date`, `expected_return_date`, `actual_return_date`, `book_status`, `status`, `created_at`, `updated_at`, `penalty`) VALUES
-(1, 1, '1', '2020-10-17', '2020-10-24', '2020-10-30', 'good', 1, '2020-10-17 07:47:49', '2020-10-18 11:13:05', '12');
+INSERT INTO `student_book_issues` (`id`, `bookTransaction_id`, `book_no`, `category`, `actual_return_date`, `book_status`, `status`, `created_at`, `updated_at`, `penalty`) VALUES
+(1, 1, '1', '', '2020-10-30', 'good', 1, '2020-10-17 07:47:49', '2020-10-18 11:13:05', '12'),
+(2, 1, '3', 'p', NULL, NULL, 1, '2020-11-03 06:22:38', '2020-11-03 06:22:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -8891,7 +8916,14 @@ CREATE TABLE IF NOT EXISTS `student_book_issue_dates` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `student_book_issue_dates_student_book_issue_id_foreign` (`student_book_issue_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `student_book_issue_dates`
+--
+
+INSERT INTO `student_book_issue_dates` (`id`, `student_book_issue_id`, `issue_date`, `expected_return_date`, `penalty_days`, `created_at`, `updated_at`) VALUES
+(1, 2, '2020-11-03', '2020-11-13', NULL, '2020-11-03 06:22:38', '2020-11-03 06:22:38');
 
 -- --------------------------------------------------------
 
@@ -8909,7 +8941,8 @@ CREATE TABLE IF NOT EXISTS `student_b_t_s` (
   `session` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `book_bank` tinyint(1) NOT NULL DEFAULT '0',
+  `book_bank` tinyint(1) NOT NULL DEFAULT 0,
+  `class_year` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -8917,11 +8950,11 @@ CREATE TABLE IF NOT EXISTS `student_b_t_s` (
 -- Dumping data for table `student_b_t_s`
 --
 
-INSERT INTO `student_b_t_s` (`id`, `BT_no`, `name`, `class`, `department`, `session`, `created_at`, `updated_at`, `book_bank`) VALUES
-(1, 'BTS482160', 'Divya Patange', '1', '2', '2', '2020-10-13 10:28:16', '2020-10-28 12:22:22', 0),
-(2, 'BTS241181', 'Shreeya', '1', '2', '2', '2020-10-13 10:28:48', '2020-10-18 10:27:44', 0),
-(3, 'BTS774532', 'Gaurav Patange', '1', '1', '1', '2020-10-13 10:29:51', '2020-10-13 10:29:51', 0),
-(4, 'BTS517374', 'Samruddhi', '1', '2', '2', '2020-10-17 08:18:40', '2020-10-17 08:18:40', 1);
+INSERT INTO `student_b_t_s` (`id`, `BT_no`, `name`, `class`, `department`, `session`, `created_at`, `updated_at`, `book_bank`, `class_year`) VALUES
+(1, 'BTS482160', 'Divya Patange', '1', '2', '2', '2020-10-13 10:28:16', '2020-11-03 03:07:04', 0, '1st year'),
+(2, 'BTS241181', 'Shreeya', '1', '2', '2', '2020-10-13 10:28:48', '2020-11-03 03:06:41', 0, '1st year'),
+(3, 'BTS774532', 'Gaurav Patange', '1', '1', '1', '2020-10-13 10:29:51', '2020-11-03 02:47:39', 0, '2nd year'),
+(4, 'BTS517374', 'Samruddhi', '1', '2', '2', '2020-10-17 08:18:40', '2020-11-03 00:07:54', 1, '1st year');
 
 -- --------------------------------------------------------
 
