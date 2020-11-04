@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Admin\BookTransaction;
 use App\Admin\StudentBT;
 use App\Admin\LibraryBook;
+use App\Admin\StudentBook;
 use App\Admin\Course;
 use App\Admin\Department;
 use App\Admin\AcademicYear;
@@ -34,21 +35,17 @@ class BookTransactionController extends Controller
               
                 $data = DB::table('book_transactions')
                 ->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'book_transactions.BT_no')
-                ->join('courses', 'courses.id', '=', 'student_b_t_s.class')
-                ->join('departments', 'departments.id', '=', 'student_b_t_s.department')
-                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session', 'student_b_t_s.class_year', 'courses.course_name', 'departments.department')->where('student_b_t_s.session', $request->academic)->get();
+                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session')->where('student_b_t_s.session', $request->academic)->get();
             }
             else{
                 $data = DB::table('book_transactions')
                 ->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'book_transactions.BT_no')
-                ->join('courses', 'courses.id', '=', 'student_b_t_s.class')
-                ->join('departments', 'departments.id', '=', 'student_b_t_s.department')
-                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session', 'student_b_t_s.class_year', 'courses.course_name', 'departments.department');
+                ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session');
                 // dd($data);
             }
             return datatables()->of($data)
             ->addColumn('action', 'auth.bookTransaction.action')
-            ->rawColumns(['name', 'action', 'class_year', 'course_name', 'department'])
+            ->rawColumns(['name', 'action'])
             ->addIndexColumn()
             ->make(true);
         }
@@ -242,9 +239,11 @@ class BookTransactionController extends Controller
     public function studentBookIssueForm($id)
     {
         $BT_no = BookTransaction::findorfail($id);
-        $issueBook = StudentBookIssue::where('bookTransaction_id', $id)->get();
+        $studentBT = StudentBT::where('BT_no', $BT_no->BT_no)->first();
+        $issueBook = StudentBookIssue::where('bookTransaction_id', $id)->where('category', '=', 'p')->get();
+        $generalBook = StudentBookIssue::where('bookTransaction_id', $id)->where('category', '=', 'g')->get();
         // dd($issueBook);
-        return view('auth.bookTransaction.studentBookIssueForm', compact('BT_no', 'issueBook'));
+        return view('auth.bookTransaction.studentBookIssueForm', compact('BT_no', 'issueBook', 'generalBook', 'studentBT'));
     }
 
     public function studentBookIssueFormSubmit(Request $request)
@@ -252,6 +251,8 @@ class BookTransactionController extends Controller
         $request->validate([
             'book_code' => 'required',
         ]);
+        if($request->category == "p")
+        {
             $checkBookAvailability = LibraryBook::where('book_no', $request->book_code)->first();
             if($checkBookAvailability->book_status == 1)
             {
@@ -287,13 +288,50 @@ class BookTransactionController extends Controller
             else{
                 return Redirect::back()->with('danger', 'Book is not available!');
             }
+        }
+        else{
+            $checkBookAvailability = StudentBook::where('book_no', $request->book_code)->first();
+            if($checkBookAvailability->book_status == 1)
+            {
+                $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
+                $session = AcademicYear::where('id', $studentBT->session)->first();
+                $date = date('Y/m/d H:i:s');
+                if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
+                {
+                    $increment_date = strtotime("+10 day", strtotime($date));
+                    $expected_date = date("Y-m-d", $increment_date);
+                    // $bookTransaction->book_code = $request->book_code;
+                    $issueBook = new StudentBookIssue();
+                    $issueBook->bookTransaction_id = $request->BT_id;
+                    $issueBook->book_no = $request->book_code;
+                    $issueBook->category = $request->category;
+                    $issueBook->status = 1;
+                    $issueBook->save();
+                    if($issueBook->save())
+                    {
+                        $issueDate = new StudentBookIssueDate();
+                        $issueDate->student_book_issue_id = $issueBook->id;
+                        $issueDate->issue_date = $date;
+                        $issueDate->expected_return_date = $expected_date;
+                        $issueDate->save();
+                    }
+                    $bookStatus = StudentBook::where('book_no', $request->book_code)->update(['book_status' => 0]);
+                    return Redirect::back()->with('success', 'Book Issue Successfully');
+                }
+                else{
+                    return Redirect::back()->with('danger', 'BT Card is expired!');
+                }
+            }
+            else{
+                return Redirect::back()->with('danger', 'Book is not available!');
+            }
+        }
         
     }
 
     public function studentBookIssueFormUpdate(Request $request)
     {
         $bookTransaction = StudentBookIssue::where('id', $request->issueID)->first();
-        $book = LibraryBook::where('book_no', $bookTransaction->book_no)->first();
         $lastIssueBookArray = StudentBookIssueDate::where('student_book_issue_id', $bookTransaction->id)->get();
         foreach($lastIssueBookArray as $l)
         {
@@ -305,19 +343,43 @@ class BookTransactionController extends Controller
         if(in_array('jQuery',$book_status)){
             $foundjquery = "found";
         }
-        if(in_array("poor", $book_status))
+
+        if($bookTransaction->category == "p")
         {
-            $penaltyPoor = (0.5 * $book->price);
+            $book = LibraryBook::where('book_no', $bookTransaction->book_no)->first();
+            if(in_array("poor", $book_status))
+            {
+                $penaltyPoor = (0.5 * $book->price);
+            }
+            else{
+                $penaltyPoor = 0;
+            }
+            if(in_array("missing", $book_status))
+            {
+                $penaltyMissing = (1.5 * $book->price);
+            }
+            else{
+                $penaltyMissing = 0;
+            }
+
         }
         else{
-            $penaltyPoor = 0;
-        }
-        if(in_array("missing", $book_status))
-        {
-            $penaltyMissing = (1.5 * $book->price);
-        }
-        else{
-            $penaltyMissing = 0;
+
+            $book =  StudentBook::where('book_no', $bookTransaction->book_no)->first();
+            if(in_array("poor", $book_status))
+            {
+                $penaltyPoor = (0.5 * $book->price);
+            }
+            else{
+                $penaltyPoor = 0;
+            }
+            if(in_array("missing", $book_status))
+            {
+                $penaltyMissing = (1.5 * $book->price);
+            }
+            else{
+                $penaltyMissing = 0;
+            }
         }
         if(in_array("good", $book_status))
         {
@@ -356,7 +418,13 @@ class BookTransactionController extends Controller
         $studentBookReturn = StudentBookIssue::where('id', $request->issueID)->first();
         if($studentBookReturn->actual_return_date)
         {
-            $libraryBook = LibraryBook::where('book_no', $studentBookReturn->book_no)->update(['book_status' => 1]);
+            if($studentBookReturn->category == "p")
+            {
+                $libraryBook = LibraryBook::where('book_no', $studentBookReturn->book_no)->update(['book_status' => 1]);
+            }
+            else{
+                $libraryBook = StudentBook::where('book_no', $studentBookReturn->book_no)->update(['book_status' => 1]);
+            }
         }
     }
 
@@ -392,4 +460,5 @@ class BookTransactionController extends Controller
         }
         $renewBook->save();
     }
+
 }

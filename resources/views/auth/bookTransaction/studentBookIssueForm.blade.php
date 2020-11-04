@@ -21,259 +21,363 @@
   </div>
   @endif
   <!-- Page Heading -->
-  <h1 class="h3 mb-2 text-gray-800">Student Book Issue</h1>
-  
-  
-<div class="modal" id="addJournal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Issue Book</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <form action="{{ route('admin.studentBookIssueForm.submit') }}" enctype="multipart/form-data" method="POST">
-      @csrf
-        <!-- Modal body -->
-        <div class="modal-body">
-          <div class="form-group ">
-            <label>Book Code</label>
-            <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="general_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
-            @error('book_code')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-          </div>
-          <input type="hidden" name="category" value="g">
-          <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
-          <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
-          <div class="form-group " id="general_book_name">
-          </div>
-        </div>
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
-      </form>
+  <h1 class="h3 mb-4 text-gray-800">Student Book Issue</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <p><b>Student Name:- </b>{{ $studentBT->name }}</p>
+      <?php 
+        $class = DB::table('courses')->where('id', $studentBT->class)->first();
+        $department = DB::table('departments')->where('id', $studentBT->department)->first();
+      ?>
+      <p><b>Class:- </b>{{ $class->course_name }}</p>
+      <p><b>Class Year:- </b>{{ $studentBT->class_year }}</p>
+      <p><b>Department:- </b>{{ $department->department }}</p>
     </div>
   </div>
-</div>
-
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">General Book</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-  <div class="row justify-content-center mt-5">
-    <div class="col-lg-6">
-      <!-- Basic Card Example -->
+  <ul class="nav nav-tabs mt-5 justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">General Book</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class="row justify-content-center mt-5">
+        <div class="col-lg-6">
+          <!-- Basic Card Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header">
+              Issue Book
+            </div>
+            <div class="card-body">
+              <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
+              @csrf 
+                <div class="form-group ">
+                  <label>Book Code</label>
+                  <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+                  @error('book_code')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+                </div>
+                <div class="form-group" id="book_name">
+                </div>
+                <input type="hidden" name="category" value="p">
+                <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
+                <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                  Add
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="card shadow mb-4">
-        <div class="card-header">
-          Issue Book
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Book Issue List</h6>
         </div>
         <div class="card-body">
-          <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
-          @csrf 
-            <div class="form-group ">
-            <label>Book Code</label>
-            <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
-            @error('book_code')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-            </div>
-            <div class="form-group" id="book_name">
-                
-            </div>
-            <input type="hidden" name="category" value="p">
-            <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
-            <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
-            <button type="submit" class="btn btn-primary btn-user btn-block">
-              Add
-            </button>
-          </form>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-  <div class="row justify-content-center mt-5">
-    <div class="col-lg-6">
-      <!-- Basic Card Example -->
-      <div class="card shadow mb-4">
-        <div class="card-header">
-          Issue Book
-        </div>
-        <div class="card-body">
-          <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
-          @csrf 
-            <div class="form-group ">
-            <label>Book Code</label>
-            <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="general_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
-            @error('book_code')
-            <span class="invalid-feedback" role="alert">
-              <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-            </div>
-            <div class="form-group" id="general_book_name">
-                
-            </div>
-            <input type="hidden" name="category" value="g">
-            <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
-            <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
-
-            <button type="submit" class="btn btn-primary btn-user btn-block">
-              Add
-            </button>
-          </form>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  </div>
-</div>
-  <!-- DataTales Example -->
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Book Issue List</h6>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-          <thead>
-            <tr>
-              <th>Sr. No.</th>
-              <th>Book No.</th>
-              <th>Book Name</th>
-              <th>Issue Date/
-              Expected Return Date</th>
-              <th>Actual Return Date</th>
-              <th>Book Condition</th>
-              <th>Action</th>
-              <th>Penalty</th>
-            </tr>
-          </thead>
-          <tfoot>
-            <tr>
-              <th>Sr. No.</th>
-              <th>Book No.</th>
-              <th>Book Name</th>
-              <th>Issue Date/
-              Expected Return Date</th>
-              <th>Actual Return Date</th>
-              <th>Book Condition</th>
-              <th>Action</th>
-              <th>Penalty</th>
-            </tr>
-          </tfoot>
-          <tbody>
-          @foreach($issueBook as $key => $book)
-            <tr>
-                <td>{{ ++$key }}</td>
-                <td>{{ $book->book_no }}</td>
-                <?php
-                    $book_name = DB::table('library_books')->where('book_no', $book->book_no)->first();
-                    $issueDates = DB::table('student_book_issue_dates')->where('student_book_issue_id', $book->id)->orderBy('id', 'ASC')->get();
-                ?>
-                <td>
-                
-                @if(isset($book_name) && !empty($book_name))
-                    {{ $book_name->book_name }}
-                @endif
-                </td>
-                <td class="p-0">
-                <table width="100%">
-                  @foreach($issueDates as $i)
-                  <tr>
-                    <td>{{ $i->issue_date }}</td>
-                    <td>{{ $i->expected_return_date
-                     }}
-                  </tr>
-                @endforeach
-                </table>
-                </td><td>
-            @if(!$book->actual_return_date)
-            <input type="date" class="form-control form-control-user end_date" name="actual_return_date">
-            @else
-            <input type="date" class="form-control form-control-user end_date" name="actual_return_date" value="{{ $book->actual_return_date }}">
-            @endif
-            </td>
-            <td>
-            @if(!$book->book_status)
-
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      <input type="checkbox" name="book_status" class="form-check-input" value="good">Good
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      <input type="checkbox" name="book_status" class="form-check-input" value="average">Average
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                    <input type="checkbox" name="book_status" class="form-check-input" value="poor">Poor
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                    <input type="checkbox" name="book_status" class="form-check-input" value="missing">Missing
-                    </label>
-                  </div>
-                  @else
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Sr. No.</th>
+                  <th>Book No.</th>
+                  <th>Book Name</th>
+                  <th>Issue Date/
+                  Expected Return Date</th>
+                  <th>Actual Return Date</th>
+                  <th>Book Condition</th>
+                  <th>Action</th>
+                  <th>Penalty</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Sr. No.</th>
+                  <th>Book No.</th>
+                  <th>Book Name</th>
+                  <th>Issue Date/
+                  Expected Return Date</th>
+                  <th>Actual Return Date</th>
+                  <th>Book Condition</th>
+                  <th>Action</th>
+                  <th>Penalty</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                @foreach($issueBook as $key => $book)
+                <tr>
+                  <td>{{ ++$key }}</td>
+                  <td>{{ $book->book_no }}</td>
                   <?php
-                  $explode = explode(",", $book->book_status);
+                      $book_name = DB::table('library_books')->where('book_no', $book->book_no)->first();
+                      $issueDates = DB::table('student_book_issue_dates')->where('student_book_issue_id', $book->id)->orderBy('id', 'ASC')->get();
                   ?>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      <input type="checkbox" name="book_status" class="form-check-input" value="good" {{ in_array("good", $explode)?  'checked' :  '' }}>Good
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                      <input type="checkbox" name="book_status" class="form-check-input" value="average" {{ in_array("average", $explode)?  'checked' :  '' }}>Average
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                    <input type="checkbox" name="book_status" class="form-check-input" value="poor" {{ in_array("poor", $explode)?  'checked' :  '' }}>Poor
-                    </label>
-                  </div>
-                  <div class="form-check-inline">
-                    <label class="form-check-label">
-                    <input type="checkbox" name="book_status" class="form-check-input" value="missing" {{ in_array("missing", $explode)?  'checked' :  '' }}>Missing
-                    </label>
-                  </div>
+                  <td>
+                  
+                  @if(isset($book_name) && !empty($book_name))
+                      {{ $book_name->book_name }}
                   @endif
-                </td>
-                <td>
-                <button class="btn btn-warning btn-circle update" data-id="{{ $book->id }}">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-info btn-circle @if(count($issueDates) == 4) @elseif(!$book->actual_return_date) renew  @endif"  data-id="{{ $book->id }}"  >
-                    <i class="fas fa-book"></i>
-                  </button>
-                </td>
-                <td>
-                  {{ $book->penalty }}
-                </td>
-            </tr>
-          @endforeach
-          </tbody>
-        </table>
+                  </td>
+                  <td class="p-0">
+                    <table width="100%">
+                      @foreach($issueDates as $i)
+                      <tr>
+                        <td>{{ $i->issue_date }}</td>
+                        <td>{{ $i->expected_return_date
+                        }}
+                      </tr>
+                    @endforeach
+                    </table>
+                  </td>
+                  <td>
+                    @if(!$book->actual_return_date)
+                    <input type="date" class="form-control form-control-user end_date" name="actual_return_date">
+                    @else
+                    <input type="date" class="form-control form-control-user end_date" name="actual_return_date" value="{{ $book->actual_return_date }}">
+                    @endif
+                  </td>
+                  <td>
+                    @if(!$book->book_status)
+
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="good">Good
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="average">Average
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="poor">Poor
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="missing">Missing
+                        </label>
+                      </div>
+                      @else
+                      <?php
+                      $explode = explode(",", $book->book_status);
+                      ?>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="good" {{ in_array("good", $explode)?  'checked' :  '' }}>Good
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="average" {{ in_array("average", $explode)?  'checked' :  '' }}>Average
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="poor" {{ in_array("poor", $explode)?  'checked' :  '' }}>Poor
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="missing" {{ in_array("missing", $explode)?  'checked' :  '' }}>Missing
+                        </label>
+                      </div>
+                      @endif
+                    </td>
+                    <td>
+                    <button class="btn btn-warning btn-circle update" data-id="{{ $book->id }}">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-info btn-circle @if(count($issueDates) == 4) @elseif(!$book->actual_return_date) renew  @endif"  data-id="{{ $book->id }}"  >
+                        <i class="fas fa-book"></i>
+                      </button>
+                    </td>
+                    <td>
+                      {{ $book->penalty }}
+                    </td>
+                </tr>
+              @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <div class="row justify-content-center mt-5">
+        <div class="col-lg-6">
+          <!-- Basic Card Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header">
+              Issue Book
+            </div>
+            <div class="card-body">
+              <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
+              @csrf 
+                <div class="form-group ">
+                <label>Book Code</label>
+                <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="general_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+                @error('book_code')
+                <span class="invalid-feedback" role="alert">
+                  <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+                </div>
+                <div class="form-group" id="general_book_name">
+                    
+                </div>
+                <input type="hidden" name="category" value="g">
+                <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
+                <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
+
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                  Add
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Book Issue List</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Sr. No.</th>
+                  <th>Book No.</th>
+                  <th>Book Name</th>
+                  <th>Issue Date/
+                  Expected Return Date</th>
+                  <th>Actual Return Date</th>
+                  <th>Book Condition</th>
+                  <th>Action</th>
+                  <th>Penalty</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Sr. No.</th>
+                  <th>Book No.</th>
+                  <th>Book Name</th>
+                  <th>Issue Date/
+                  Expected Return Date</th>
+                  <th>Actual Return Date</th>
+                  <th>Book Condition</th>
+                  <th>Action</th>
+                  <th>Penalty</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                @foreach($generalBook as $key => $book)
+                <tr>
+                  <td>{{ ++$key }}</td>
+                  <td>{{ $book->book_no }}</td>
+                  <?php
+                      $book_name = DB::table('student_books')->where('book_no', $book->book_no)->first();
+                      $issueDates = DB::table('student_book_issue_dates')->where('student_book_issue_id', $book->id)->orderBy('id', 'ASC')->get();
+                  ?>
+                  <td>
+                  
+                  @if(isset($book_name) && !empty($book_name))
+                      {{ $book_name->book_name }}
+                  @endif
+                  </td>
+                  <td class="p-0">
+                    <table width="100%">
+                      @foreach($issueDates as $i)
+                      <tr>
+                        <td>{{ $i->issue_date }}</td>
+                        <td>{{ $i->expected_return_date
+                        }}
+                      </tr>
+                    @endforeach
+                    </table>
+                  </td>
+                  <td>
+                    @if(!$book->actual_return_date)
+                    <input type="date" class="form-control form-control-user end_date" name="actual_return_date">
+                    @else
+                    <input type="date" class="form-control form-control-user end_date" name="actual_return_date" value="{{ $book->actual_return_date }}">
+                    @endif
+                  </td>
+                  <td>
+                    @if(!$book->book_status)
+
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="good">Good
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="average">Average
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="poor">Poor
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="missing">Missing
+                        </label>
+                      </div>
+                      @else
+                      <?php
+                      $explode = explode(",", $book->book_status);
+                      ?>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="good" {{ in_array("good", $explode)?  'checked' :  '' }}>Good
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" name="book_status" class="form-check-input" value="average" {{ in_array("average", $explode)?  'checked' :  '' }}>Average
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="poor" {{ in_array("poor", $explode)?  'checked' :  '' }}>Poor
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                        <input type="checkbox" name="book_status" class="form-check-input" value="missing" {{ in_array("missing", $explode)?  'checked' :  '' }}>Missing
+                        </label>
+                      </div>
+                      @endif
+                    </td>
+                    <td>
+                    <button class="btn btn-warning btn-circle update" data-id="{{ $book->id }}">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-info btn-circle @if(count($issueDates) == 4) @elseif(!$book->actual_return_date) renew  @endif"  data-id="{{ $book->id }}"  >
+                        <i class="fas fa-book"></i>
+                      </button>
+                    </td>
+                    <td>
+                      {{ $book->penalty }}
+                    </td>
+                </tr>
+              @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
