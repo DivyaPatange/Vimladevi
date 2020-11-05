@@ -23,7 +23,12 @@
   <!-- Page Heading -->
   <h1 class="h3 mb-4 text-gray-800">Student Book Issue</h1>
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+    <div class="card shadow mb-4">
+            <div class="card-header">
+              Student Profile
+            </div>
+            <div class="card-body"
       <p><b>Student Name:- </b>{{ $studentBT->name }}</p>
       <?php 
         $class = DB::table('courses')->where('id', $studentBT->class)->first();
@@ -32,20 +37,10 @@
       <p><b>Class:- </b>{{ $class->course_name }}</p>
       <p><b>Class Year:- </b>{{ $studentBT->class_year }}</p>
       <p><b>Department:- </b>{{ $department->department }}</p>
+      </div>
+      </div>
     </div>
-  </div>
-  <ul class="nav nav-tabs mt-5 justify-content-center" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">General Book</a>
-    </li>
-  </ul>
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-      <div class="row justify-content-center mt-5">
-        <div class="col-lg-6">
+    <div class="col-md-6">
           <!-- Basic Card Example -->
           <div class="card shadow mb-4">
             <div class="card-header">
@@ -54,18 +49,30 @@
             <div class="card-body">
               <form method="post" action="{{ route('admin.studentBookIssueForm.submit') }}">
               @csrf 
-                <div class="form-group ">
-                  <label>Book Code</label>
-                  <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+              <div class="form-group ">
+                  <label>Category</label>
+                  <select class="form-control form-control-user @error('category') is-invalid @enderror" name="category" id="category" onchange="myFunction()">
+                    <option value="">-Select Category-</option>
+                    <option value="p">Pustak Pedhi</option>
+                    <option value="g">General Book</option>
+                  </select>
                   @error('book_code')
                   <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                   </span>
                   @enderror
                 </div>
-                <div class="form-group" id="book_name">
+                <div class="form-group ">
+                  <label>Book Code</label>
+                  <input type="text" class="form-control book_code form-control-user @error('book_code') is-invalid @enderror" name="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+                  @error('book_code')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
                 </div>
-                <input type="hidden" name="category" value="p">
+                <div class="form-group book_name">
+                </div>
                 <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
                 <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
                 <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -75,7 +82,42 @@
             </div>
           </div>
         </div>
+  </div>
+  <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">General Book</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <section class="py-5">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <input type="number" class="form-control form-control-user" id="search_book_no" placeholder="Search Book No.">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <input type="text" class="form-control form-control-user" id="search_book_name" placeholder="Search Book Name">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <input type="text" class="form-control form-control-user" id="search_author_name" placeholder="Search Author Name">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <input type="text" class="form-control form-control-user" id="search_publication" placeholder="Search Publication">
+          </div>
+        </div>
       </div>
+    </section>
+      
       <div class="card shadow mb-4">
         <div class="card-header py-3">
           <h6 class="m-0 font-weight-bold text-primary">Book Issue List</h6>
@@ -397,6 +439,21 @@ $(document).ready(function() {
     } );
 </script>
 <script>
+function myFunction(){
+        // the text typed in the input field is assigned to a variable 
+        var query = document.getElementById("category").value;
+        // alert(query);
+        if(query == "p")
+        {
+          document.getElementByClassName("book_code").setAttribute("id", "book_code");
+          document.getElementByClassName("book_name").setAttribute("id", "book_name");
+        }
+        if(query == "g")
+        {
+          document.getElementsByClassName("book_code").setAttribute("id", "general_book_code");
+          document.getElementsByClassName("book_name").setAttribute("id", "general_book_name");
+        }
+}
 $(document).ready(function () {
     // keyup function looks at the keys typed on the search box
     $('#book_code').on('keyup',function() {
