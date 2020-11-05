@@ -518,4 +518,190 @@ class SearchController extends Controller
             }
         }
     }
+
+    public function searchBookNo(Request $request)
+    {
+        if($request->ajax())
+        {
+            if($request->category == "p")
+            {   
+                // dd($request->search_book_no);
+                $book = LibraryBook::where('book_no', 'LIKE', $request->search_book_no
+                    .'%')->get();
+                // dd($book);
+                $output = '<div class="card shadow mb-4">
+                <div class="card-header">Pustak Pedhi Books</div>
+                <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Book Name</th>
+                        <th>Book No.</th>
+                        <th>Author Name</th>
+                        <th>Total Books</th>
+                        <th>Available Books</th>
+                        <th>Issue Book</th>
+                    </tr>';
+                if (count($book)>0) 
+                {
+                    // concatenate output to the array
+                    // loop through the result array
+                    foreach ($book as $key => $row)
+                    {
+                        if($row->book_no == $request->search_book_no)
+                        {
+                            $countBooks = LibraryBook::where('book_name', $row->book_name)->get();
+                            $availableBook = LibraryBook::where('book_name', $row->book_name)->where('book_status', 1)->get();
+                            $issueBook = LibraryBook::where('book_name', $row->book_name)->where('book_status', 0)->get();
+                            $output .= '<tr>'. 
+                            '<td>'.++$key.'</td>'.
+                            '<td>'.$row->book_name.'</td>'. 
+                            '<td>'.$row->book_no.'</td>'. 
+                            '<td>'.$row->author_name.'</td>'. 
+                            '<td>'.count($countBooks).'</td>'. 
+                            '<td>'.count($availableBook).'</td>'. 
+                            '<td>'.count($issueBook).'</td>'.
+                            '</tr>';
+                        }
+                        
+                    }
+                    // end of output
+                }
+                
+                else {
+                    // if there's no matching results according to the input
+                    $output .= 'No results';
+                }
+                $output .= '</table></div></div>';
+                
+                return $output;
+            }
+            else{
+                $book = StudentBook::where('book_no', 'LIKE', $request->search_book_no
+                    .'%')->get();
+                    // dd($book);
+                    $output = '';
+                    if (count($book)>0) {
+                        $output = '<div class="card shadow mb-4">
+                    <div class="card-header">General Books</div>
+                    <div class="card-body">
+                    <table class="table table-bordered">
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Book Name</th>
+                                    <th>Book No.</th>
+                                    <th>Author Name</th>
+                                    <th>Total Books</th>
+                                    <th>Available Books</th>
+                                    <th>Issue Book</th>
+                                </tr>';
+                        // concatenate output to the array
+                        // loop through the result array
+                        foreach ($book as $key => $row)
+                        {
+                            if($row->book_no == $request->search_book_no)
+                            {
+                                $countBooks = StudentBook::where('book_name', $row->book_name)->get();
+                                $availableBook = StudentBook::where('book_name', $row->book_name)->where('book_status', 1)->get();
+                                $issueBook = StudentBook::where('book_name', $row->book_name)->where('book_status', 0)->get();
+                               $output .= '<tr>'. 
+                               '<td>'.++$key.'</td>'.
+                               '<td>'.$row->book_name.'</td>'. 
+                               '<td>'.$row->book_no.'</td>'. 
+                               '<td>'.$row->author_name.'</td>'. 
+                               '<td>'.count($countBooks).'</td>'. 
+                               '<td>'.count($availableBook).'</td>'. 
+                               '<td>'.count($issueBook).'</td>'.
+                               '</tr>';
+                            }
+                            
+                        }
+                        // end of output
+                    }
+                    
+                    else {
+                        // if there's no matching results according to the input
+                        $output .= '<tr><td colspan="7">No results</td></tr>';
+                    }
+                    $output .= '</table></div></div>';
+                    
+                    return $output;
+            }
+        }
+    }
+
+    public function searchBookName(Request $request)
+    {
+        if($request->ajax())
+        {
+            // dd($request->category == "p");
+            if($request->category == "p")
+            { 
+                $book = LibraryBook::where('book_name', 'LIKE', $request->search_book_name
+                    .'%')->get();
+                    dd($book);
+                    $availableBook = LibraryBook::where('book_name', 'LIKE', $request->search_book_name
+                    .'%')->where('book_status', 1)->get();
+                    $issueBook = LibraryBook::where('book_name', 'LIKE', $request->search_book_name
+                    .'%')->where('book_status', 0)->get();
+                    $output = '<div class="card shadow mb-4">
+                    <div class="card-header">Pustak Pedhi Books</div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <p><b>Total Books :- </b>'.count($book).'</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><b>Available Books :- </b>'.count($availableBook).'</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><b>Issue Books :- </b>'.count($issueBook).'</p>
+                            </div>
+                        </div>
+                    <table class="table table-bordered" id="dataTable">
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Book Name</th>
+                                    <th>Book No.</th>
+                                    <th>Author Name</th>
+                                    <th>Publication</th>
+                                    <th>Book Status</th>
+                                </tr>';
+                    if (count($book)>0) {
+                        // concatenate output to the array
+                        // loop through the result array
+                        foreach ($book as $key => $row)
+                        {
+                               $output .= '<tr>'. 
+                               '<td>'.++$key.'</td>'.
+                               '<td>'.$row->book_name.'</td>'. 
+                               '<td>'.$row->book_no.'</td>'. 
+                               '<td>'.$row->author_name.'</td>'. 
+                               '<td>'.$row->publication.'</td>';
+                               if($row->book_status == 1)
+                               {
+                                    $output .= '<td>Available</td>';  
+                               }
+                               else{
+                                $output .= '<td>Issued</td>'; 
+                               }
+                               '</tr>';
+                            
+                        }
+                        // end of output
+                    }
+                    
+                    else {
+                        // if there's no matching results according to the input
+                        $output .= 'No results';
+                    }
+                    $output .= '</table></div></div>';
+                    
+                    return $output;
+            }
+            else{
+
+            }
+        }
+    }
 }

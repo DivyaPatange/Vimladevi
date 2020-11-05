@@ -69,6 +69,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:admi
     Route::get('/search', 'SearchController@search')->name('search');
     Route::post('/fetch', 'SearchController@fetch')->name('fetch');
     Route::get('/searchBookDetails', 'SearchController@searchBookDetails')->name('searchBookDetails');
+    Route::get('/searchBookNo', 'SearchController@searchBookNo')->name('searchBookNo');
+    Route::get('/searchBookName', 'SearchController@searchBookName')->name('searchBookName');
 });
 Route::get('/user/books', 'Admin\BooksController@viewBook')->middleware('can:user')->name('user.books.index');
 Route::get('/book/{id}', 'Admin\BooksController@showBook')->name('book.view');
