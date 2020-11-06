@@ -347,39 +347,23 @@ class BookTransactionController extends Controller
         if($bookTransaction->category == "p")
         {
             $book = LibraryBook::where('book_no', $bookTransaction->book_no)->first();
-            if(in_array("poor", $book_status))
-            {
-                $penaltyPoor = (0.5 * $book->price);
-            }
-            else{
-                $penaltyPoor = 0;
-            }
-            if(in_array("missing", $book_status))
-            {
-                $penaltyMissing = (1.5 * $book->price);
-            }
-            else{
-                $penaltyMissing = 0;
-            }
-
         }
         else{
-
             $book =  StudentBook::where('book_no', $bookTransaction->book_no)->first();
-            if(in_array("poor", $book_status))
-            {
-                $penaltyPoor = (0.5 * $book->price);
-            }
-            else{
-                $penaltyPoor = 0;
-            }
-            if(in_array("missing", $book_status))
-            {
-                $penaltyMissing = (1.5 * $book->price);
-            }
-            else{
-                $penaltyMissing = 0;
-            }
+        }
+        if(in_array("poor", $book_status))
+        {
+            $penaltyPoor = (0.5 * $book->price);
+        }
+        else{
+            $penaltyPoor = 0;
+        }
+        if(in_array("missing", $book_status))
+        {
+            $penaltyMissing = (1.5 * $book->price);
+        }
+        else{
+            $penaltyMissing = 0;
         }
         if(in_array("good", $book_status))
         {

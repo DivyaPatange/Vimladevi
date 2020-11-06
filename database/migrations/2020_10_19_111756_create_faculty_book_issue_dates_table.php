@@ -17,8 +17,10 @@ class CreateFacultyBookIssueDatesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('faculty_book_issue_id');
             $table->foreign('faculty_book_issue_id')->references('id')->on('faculty_book_issues');
+            $table->string('category');
             $table->date('issue_date');
             $table->date('expected_return_date');
+            $table->string('penalty_days')->nullable();
             $table->timestamps();
         });
     }

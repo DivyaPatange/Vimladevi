@@ -89,7 +89,7 @@ class StudentBTCardController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'BT_no' => 'required',
+            'BT_no' => 'required|unique:student_b_t_s',
             'name' => 'required',
             'class' => 'required',
             'department' => 'required',
@@ -148,6 +148,7 @@ class StudentBTCardController extends Controller
     {
         $studentBT = StudentBT::findorfail($id);
         $request->validate([
+            'BT_no' => 'required|unique:student_b_t_s,BT_no,'.$id,
             'name' => 'required',
             'class' => 'required',
             'department' => 'required',

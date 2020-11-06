@@ -40,7 +40,7 @@ class SearchController extends Controller
                     $output = '<div class="card shadow mb-4">
                     <div class="card-header">Pustak Pedhi Books</div>
                     <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-responsive">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -105,7 +105,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -168,7 +168,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -231,7 +231,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -284,7 +284,7 @@ class SearchController extends Controller
                         $output = '<div class="card shadow mb-4">
                     <div class="card-header">General Books</div>
                     <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-responsive">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -348,7 +348,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -411,7 +411,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -474,7 +474,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -532,7 +532,7 @@ class SearchController extends Controller
                 $output = '<div class="card shadow mb-4">
                 <div class="card-header">Pustak Pedhi Books</div>
                 <div class="card-body">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-responsive">
                     <tr>
                         <th>Sr. No.</th>
                         <th>Book Name</th>
@@ -576,7 +576,7 @@ class SearchController extends Controller
                 
                 return $output;
             }
-            else{
+            if($request->category == "g"){
                 $book = StudentBook::where('book_no', 'LIKE', $request->search_book_no
                     .'%')->get();
                     // dd($book);
@@ -585,7 +585,7 @@ class SearchController extends Controller
                         $output = '<div class="card shadow mb-4">
                     <div class="card-header">General Books</div>
                     <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-responsive">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -639,7 +639,7 @@ class SearchController extends Controller
             { 
                 $book = LibraryBook::where('book_name', 'LIKE', $request->search_book_name
                     .'%')->get();
-                    dd($book);
+                    // dd($book);
                     $availableBook = LibraryBook::where('book_name', 'LIKE', $request->search_book_name
                     .'%')->where('book_status', 1)->get();
                     $issueBook = LibraryBook::where('book_name', 'LIKE', $request->search_book_name
@@ -658,7 +658,7 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -699,9 +699,200 @@ class SearchController extends Controller
                     
                     return $output;
             }
-            else{
-
+            if($request->category == "g"){
+                $book = StudentBook::where('book_name', 'LIKE', $request->search_book_name
+                    .'%')->get();
+                    $availableBook = StudentBook::where('book_name', 'LIKE', $request->search_book_name
+                    .'%')->where('book_status', 1)->get();
+                    $issueBook = StudentBook::where('book_name', 'LIKE', $request->search_book_name
+                    .'%')->where('book_status', 0)->get();
+                    $output = '<div class="card shadow mb-4">
+                    <div class="card-header">General Books</div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <p><b>Total Books :- </b>'.count($book).'</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><b>Available Books :- </b>'.count($availableBook).'</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p><b>Issue Books :- </b>'.count($issueBook).'</p>
+                            </div>
+                        </div>
+                    <table class="table table-bordered table-responsive" id="dataTable">
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Book Name</th>
+                                    <th>Book No.</th>
+                                    <th>Author Name</th>
+                                    <th>Publication</th>
+                                    <th>Book Status</th>
+                                </tr>';
+                    if (count($book)>0) {
+                        // concatenate output to the array
+                        // loop through the result array
+                        foreach ($book as $key => $row)
+                        {
+                               $output .= '<tr>'. 
+                               '<td>'.++$key.'</td>'.
+                               '<td>'.$row->book_name.'</td>'. 
+                               '<td>'.$row->book_no.'</td>'. 
+                               '<td>'.$row->author_name.'</td>'. 
+                               '<td>'.$row->publication.'</td>';
+                               if($row->book_status == 1)
+                               {
+                                    $output .= '<td>Available</td>';  
+                               }
+                               else{
+                                $output .= '<td>Issued</td>'; 
+                               }
+                               '</tr>';
+                            
+                        }
+                        // end of output
+                    }
+                    
+                    else {
+                        // if there's no matching results according to the input
+                        $output .= 'No results';
+                    }
+                    $output .= '</table></div></div>';
+                    
+                    return $output;
             }
+        }
+    }
+
+    public function searchAuthorName(Request $request)
+    {
+        if($request->ajax())
+        {
+            if($request->category == "p")
+            {
+                $book = LibraryBook::where('author_name', 'LIKE', $request->search_author_name
+                    .'%')->get();
+                $availableBook = LibraryBook::where('author_name', 'LIKE', $request->search_author_name
+                .'%')->where('book_status', 1)->get();
+                $issueBook = LibraryBook::where('author_name', 'LIKE', $request->search_author_name
+                .'%')->where('book_status', 0)->get();
+                $output = '<div class="card shadow mb-4">
+                <div class="card-header">Pustak Pedhi Books</div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <p><b>Total Books :- </b>'.count($book).'</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><b>Available Books :- </b>'.count($availableBook).'</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><b>Issue Books :- </b>'.count($issueBook).'</p>
+                        </div>
+                    </div>
+                <table class="table table-bordered table-responsive" id="dataTable">
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Book Name</th>
+                                <th>Book No.</th>
+                                <th>Author Name</th>
+                                <th>Publication</th>
+                                <th>Book Status</th>
+                            </tr>';
+                if (count($book)>0) {
+                    // concatenate output to the array
+                    // loop through the result array
+                    foreach ($book as $key => $row)
+                    {
+                            $output .= '<tr>'. 
+                            '<td>'.++$key.'</td>'.
+                            '<td>'.$row->book_name.'</td>'. 
+                            '<td>'.$row->book_no.'</td>'. 
+                            '<td>'.$row->author_name.'</td>'. 
+                            '<td>'.$row->publication.'</td>';
+                            if($row->book_status == 1)
+                            {
+                                $output .= '<td>Available</td>';  
+                            }
+                            else{
+                            $output .= '<td>Issued</td>'; 
+                            }
+                            '</tr>';
+                        
+                    }
+                    // end of output
+                }
+                
+                else {
+                    // if there's no matching results according to the input
+                    $output .= 'No results';
+                }
+                $output .= '</table></div></div>';
+                
+                return $output;
+            }
+        }
+        if($request->category == "g"){
+            $book = StudentBook::where('author_name', 'LIKE', $request->search_author_name
+            .'%')->get();
+            $availableBook = StudentBook::where('author_name', 'LIKE', $request->search_author_name
+            .'%')->where('book_status', 1)->get();
+            $issueBook = StudentBook::where('author_name', 'LIKE', $request->search_author_name
+            .'%')->where('book_status', 0)->get();
+            $output = '<div class="card shadow mb-4">
+            <div class="card-header">General Books</div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <p><b>Total Books :- </b>'.count($book).'</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p><b>Available Books :- </b>'.count($availableBook).'</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p><b>Issue Books :- </b>'.count($issueBook).'</p>
+                    </div>
+                </div>
+            <table class="table table-bordered table-responsive" id="dataTable">
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Book Name</th>
+                            <th>Book No.</th>
+                            <th>Author Name</th>
+                            <th>Publication</th>
+                            <th>Book Status</th>
+                        </tr>';
+            if (count($book)>0) {
+                // concatenate output to the array
+                // loop through the result array
+                foreach ($book as $key => $row)
+                {
+                        $output .= '<tr>'. 
+                        '<td>'.++$key.'</td>'.
+                        '<td>'.$row->book_name.'</td>'. 
+                        '<td>'.$row->book_no.'</td>'. 
+                        '<td>'.$row->author_name.'</td>'. 
+                        '<td>'.$row->publication.'</td>';
+                        if($row->book_status == 1)
+                        {
+                            $output .= '<td>Available</td>';  
+                        }
+                        else{
+                        $output .= '<td>Issued</td>'; 
+                        }
+                        '</tr>';
+                    
+                }
+                // end of output
+            }
+            
+            else {
+                // if there's no matching results according to the input
+                $output .= 'No results';
+            }
+            $output .= '</table></div></div>';
+            
+            return $output;
         }
     }
 }

@@ -17,6 +17,7 @@ class CreateBookBanksTable extends Migration
             $table->bigIncrements('id');
             $table->string('book_no');
             $table->string('BT_no');
+            $table->string('category');
             $table->date('issue_date');
             $table->date('expected_return_date');
             $table->date('actual_return_date')->nullable();

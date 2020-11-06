@@ -21,6 +21,7 @@ class CreateStudentBTSTable extends Migration
             $table->string('class_year');
             $table->string('department');
             $table->string('session');
+            $table->boolean('book_bank')->default(0);
             $table->timestamps();
         });
     }
