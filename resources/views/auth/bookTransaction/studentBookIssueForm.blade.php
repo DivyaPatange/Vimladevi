@@ -44,7 +44,8 @@ $(document).ready(function(){
 </button>
     </div>
   </div>
-  <section class="py-5" id="searchForm">
+  <div id="searchForm">
+  <section class="py-5">
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
@@ -88,6 +89,7 @@ $(document).ready(function(){
   <section>
     <div id="bookRecord"></div>
   </section>
+</div>
   <div class="row">
     <div class="col-md-12">
       <div class="card shadow mb-4">

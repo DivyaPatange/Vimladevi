@@ -44,7 +44,8 @@ $(document).ready(function(){
       </button>
     </div>
   </div>
-  <section class="py-5" id="searchForm">
+  <div id="searchForm">
+  <section class="py-5">
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
@@ -84,6 +85,7 @@ $(document).ready(function(){
   <section>
     <div id="bookRecord"></div>
   </section>
+</div>
   <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>

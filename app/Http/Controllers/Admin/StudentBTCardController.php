@@ -158,6 +158,7 @@ class StudentBTCardController extends Controller
         $studentBT->BT_no = $request->BT_no;
         $studentBT->name = $request->name;
         $studentBT->class = $request->class;
+        $studentBT->class_year = $request->class_year;
         $studentBT->department = $request->department;
         $studentBT->session = $request->session;
         if($request->book_bank){

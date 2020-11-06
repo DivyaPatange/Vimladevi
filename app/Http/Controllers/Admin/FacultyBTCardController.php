@@ -69,7 +69,6 @@ class FacultyBTCardController extends Controller
         $facultyBT->BT_no = $request->BT_no;
         $facultyBT->name = $request->name;
         $facultyBT->session = $request->session;
-        $facultyBT->BT_no = "BTF".$id;
         $facultyBT->save();
         return redirect('/admin/faculty-bt-card')->with('success', 'Faculty BT Card added successfully!');
     }
