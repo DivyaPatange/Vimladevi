@@ -4,6 +4,19 @@
 <link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <link href="{{ asset('adminAsset/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#searchButton").click(function(){
+    $("#searchForm").toggle();
+  });
+});
+</script>
+<style>
+#searchForm{
+  display:none;
+}
+</style>
 @endsection
 @section('content')
 <!-- Begin Page Content -->
@@ -23,13 +36,15 @@
   <!-- Page Heading -->
   <div class="row">
     <div class="col-md-6">
-      <h1 class="h3 mb-2 text-gray-800">Faculty Book Issue</h1>
+      <h1 class="h3 mb-2 text-gray-800">Faculty Book Issue ({{ $facultyBT->name }})</h1>
     </div>
     <div class="col-md-6">
-      <h1 class="h3 mb-2 text-gray-800 text-md-right text-sm-left">{{ $facultyBT->name }}</h1>
+      <button class="btn btn-secondary float-md-right float-sm-left" id="searchButton">
+        Search Book
+      </button>
     </div>
   </div>
-  <section class="py-5">
+  <section class="py-5" id="searchForm">
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">

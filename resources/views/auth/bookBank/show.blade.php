@@ -4,6 +4,19 @@
 <link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <link href="{{ asset('adminAsset/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#searchButton").click(function(){
+    $("#searchForm").toggle();
+  });
+});
+</script>
+<style>
+#searchForm{
+  display:none;
+}
+</style>
 @endsection
 @section('content')
 <!-- Begin Page Content -->
@@ -21,8 +34,63 @@
   </div>
   @endif
   <!-- Page Heading -->
-  <h1 class="h3 mb-2 text-gray-800">Book Issue</h1>
   <div class="row">
+    <div class="col-md-6">
+      <h1 class="h3 mb-2 text-gray-800">Book Bank</h1>
+    </div>
+    <div class="col-md-6">
+      <button class="btn btn-secondary float-md-right float-sm-left" id="searchButton">
+        Search Book
+      </button>
+    </div>
+  </div>
+  <section class="py-5" id="searchForm">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <select class="form-control form-control-user" id="search_category">
+            <option value="">-Select Category-</option>
+            <option value="p">Pustak Pedhi</option>
+            <option value="g">General Book</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="number" class="form-control form-control-user" id="search_book_no" placeholder="Search Book No.">
+            <div class="input-group-append">
+              <span class="input-group-text" id="book_no_search"><i class="fas fa-search fa-sm"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control form-control-user" id="search_book_name" placeholder="Search Book Name">
+            <div class="input-group-append">
+              <span class="input-group-text" id="book_name_search"><i class="fas fa-search fa-sm"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control form-control-user" id="search_author_name" placeholder="Search Author Name">
+            <div class="input-group-append">
+              <span class="input-group-text" id="author_name_search"><i class="fas fa-search fa-sm"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div id="bookRecord"></div>
+  </section>
+  <div class="row mt-5">
     <div class="col-md-12">
       <div class="card shadow mb-4">
         <div class="card-header">
@@ -55,46 +123,7 @@
       </div>
     </div>
   </div>
-  <section class="py-5">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="form-group">
-          <select class="form-control form-control-user" id="search_category">
-            <option value="">-Select Category-</option>
-            <option value="p">Pustak Pedhi</option>
-            <option value="g">General Book</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="input-group">
-          <input type="number" class="form-control form-control-user" id="search_book_no" placeholder="Search Book No.">
-          <div class="input-group-append">
-            <span class="input-group-text" id="book_no_search"><i class="fas fa-search fa-sm"></i></span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="input-group">
-          <input type="text" class="form-control form-control-user" id="search_book_name" placeholder="Search Book Name">
-          <div class="input-group-append">
-            <span class="input-group-text" id="book_name_search"><i class="fas fa-search fa-sm"></i></span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="input-group">
-          <input type="text" class="form-control form-control-user" id="search_author_name" placeholder="Search Author Name">
-          <div class="input-group-append">
-            <span class="input-group-text" id="author_name_search"><i class="fas fa-search fa-sm"></i></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section>
-    <div id="bookRecord"></div>
-  </section>
+  
   <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Pustak Pedhi</a>

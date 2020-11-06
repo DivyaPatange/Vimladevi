@@ -40,7 +40,8 @@ class SearchController extends Controller
                     $output = '<div class="card shadow mb-4">
                     <div class="card-header">Pustak Pedhi Books</div>
                     <div class="card-body">
-                    <table class="table table-bordered table-responsive">
+                    <div class="table-responsive">
+                            <table class="table table-bordered">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -79,7 +80,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -105,7 +106,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -142,7 +144,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -168,7 +170,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -205,7 +208,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -231,7 +234,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -268,7 +272,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -284,7 +288,8 @@ class SearchController extends Controller
                         $output = '<div class="card shadow mb-4">
                     <div class="card-header">General Books</div>
                     <div class="card-body">
-                    <table class="table table-bordered table-responsive">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-responsive">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -322,7 +327,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= '<tr><td colspan="7">No results</td></tr>';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -348,7 +353,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -385,7 +391,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -411,7 +417,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-responsive" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -448,7 +455,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -474,7 +481,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -511,7 +519,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
                 }
@@ -532,7 +540,8 @@ class SearchController extends Controller
                 $output = '<div class="card shadow mb-4">
                 <div class="card-header">Pustak Pedhi Books</div>
                 <div class="card-body">
-                <table class="table table-bordered table-responsive">
+                <div class="table-responsive">
+                <table class="table table-bordered">
                     <tr>
                         <th>Sr. No.</th>
                         <th>Book Name</th>
@@ -572,7 +581,7 @@ class SearchController extends Controller
                     // if there's no matching results according to the input
                     $output .= 'No results';
                 }
-                $output .= '</table></div></div>';
+                $output .= '</table></div></div></div>';
                 
                 return $output;
             }
@@ -585,7 +594,8 @@ class SearchController extends Controller
                         $output = '<div class="card shadow mb-4">
                     <div class="card-header">General Books</div>
                     <div class="card-body">
-                    <table class="table table-bordered table-responsive">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -623,7 +633,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= '<tr><td colspan="7">No results</td></tr>';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
             }
@@ -658,7 +668,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                    <table class="table table-bordered " id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -695,7 +706,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
             }
@@ -720,7 +731,8 @@ class SearchController extends Controller
                                 <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                             </div>
                         </div>
-                    <table class="table table-bordered table-responsive" id="dataTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable">
                                 <tr>
                                     <th>Sr. No.</th>
                                     <th>Book Name</th>
@@ -757,7 +769,7 @@ class SearchController extends Controller
                         // if there's no matching results according to the input
                         $output .= 'No results';
                     }
-                    $output .= '</table></div></div>';
+                    $output .= '</table></div></div></div>';
                     
                     return $output;
             }
@@ -790,7 +802,8 @@ class SearchController extends Controller
                             <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                         </div>
                     </div>
-                <table class="table table-bordered table-responsive" id="dataTable">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
                             <tr>
                                 <th>Sr. No.</th>
                                 <th>Book Name</th>
@@ -827,7 +840,7 @@ class SearchController extends Controller
                     // if there's no matching results according to the input
                     $output .= 'No results';
                 }
-                $output .= '</table></div></div>';
+                $output .= '</table></div></div></div>';
                 
                 return $output;
             }
@@ -853,7 +866,8 @@ class SearchController extends Controller
                         <p><b>Issue Books :- </b>'.count($issueBook).'</p>
                     </div>
                 </div>
-            <table class="table table-bordered table-responsive" id="dataTable">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable">
                         <tr>
                             <th>Sr. No.</th>
                             <th>Book Name</th>
@@ -890,7 +904,7 @@ class SearchController extends Controller
                 // if there's no matching results according to the input
                 $output .= 'No results';
             }
-            $output .= '</table></div></div>';
+            $output .= '</table></div></div></div>';
             
             return $output;
         }

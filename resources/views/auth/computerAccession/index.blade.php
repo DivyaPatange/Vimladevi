@@ -137,23 +137,7 @@
 <!-- /.container-fluid -->
 @endsection
 @section('customjs')
-<!-- <script src="{{ asset('adminAsset/js/bootstrap-datetimepicker.js') }}"></script> -->
-<!-- <script>
-$(function () {
-  $(".accession_end_time").datetimepicker({
-      format : 'YYYY-MM-DD H:m:s',
-      locale : 'en',
-  });
-});
-</script>
-<script>
-$(function () {
-  $('.start_time').datetimepicker({
-      format : 'YYYY-MM-DD H:m:s',
-      locale : 'en',
-  });
-});
-</script> -->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
    $.ajaxSetup({

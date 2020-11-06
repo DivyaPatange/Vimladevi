@@ -39,7 +39,7 @@ $(document).ready(function(){
       <h1 class="h3 mb-4 text-gray-800">Student Book Issue</h1>
     </div>
     <div class="col-md-6">
-    <button class="btn btn-dark float-md-right float-sm-left" id="searchButton">
+    <button class="btn btn-secondary float-md-right float-sm-left" id="searchButton">
     Search Book
 </button>
     </div>
