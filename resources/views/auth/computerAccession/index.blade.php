@@ -33,15 +33,30 @@
                 <div class="card-body">
                     <form method="post" action="{{ route('admin.computerAccession.store') }}">
                     @csrf 
+                    <div class="row">
+                      <div class="col-md-6">
                         <div class="form-group ">
-                            <label>BT Card No.</label>
-                            <input type="text" class="form-control form-control-user @error('BT_no') is-invalid @enderror" name="BT_no" id="BT_no" placeholder="Enter BT Card No." value="{{ old('BT_no') }}">
-                            @error('BT_no')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
+                          <label>BT Card No.</label>
+                          <input type="text" class="form-control form-control-user @error('BT_no') is-invalid @enderror" name="BT_no" id="BT_no" placeholder="Enter BT Card No." value="{{ old('BT_no') }}">
+                          @error('BT_no')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
                         </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Class Year</label>
+                          <input type="text" class="form-control form-control-user @error('class_year') is-invalid @enderror" name="class_year" id="class_year" >
+                        </div>
+                        @error('class_year')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                      </div>
+                    </div>
                         <div class="form-group " id="student_name">
                         </div>
                         <div class="form-group ">
@@ -74,6 +89,7 @@
                                 <button type="submit" class="btn btn-primary btn-user">
                                 Add
                                 </button>
+                                <button type="button" class="btn btn-dark" id="searchStudent">Search</button>
                             </div>
                         </div>
                     </form>
@@ -109,6 +125,7 @@
               <th>Sr. No.</th>
               <th>BT Card No.</th>
               <th>Student Name</th>
+              <th>Class Year</th>
               <th>System No.</th>
               <th>Start Time</th>
               <th>End Time</th>
@@ -120,6 +137,7 @@
             <th>Sr. No.</th>
               <th>BT Card No.</th>
               <th>Student Name</th>
+              <th>Class Year</th>
               <th>System No.</th>
               <th>Start Time</th>
               <th>End Time</th>
@@ -197,6 +215,7 @@ $(document).ready(function(){
     { data: 'id', name: 'id' },
     { data: 'BT_no', name: 'BT_no' },
     { data: 'name', name: 'name' },
+    { data: 'class_year', name: 'class_year' },
     { data: 'system_no', name:'system_no'},
     { data: 'start_time', name: 'start_time' },
     { data: 'end_time', name: 'end_time' , orderable: false},
@@ -219,9 +238,10 @@ $(document).ready(function(){
 <script>
 $(document).ready(function () {
     // keyup function looks at the keys typed on the search box
-    $('#BT_no').on('keyup',function() {
+    $('#searchStudent').on('click',function() {
         // the text typed in the input field is assigned to a variable 
-        var query = $(this).val();
+        var BT_no = $('#BT_no').val();
+        var class_year = $('#class_year').val();
         // call to an ajax function
         $.ajax({
             // assign a controller function to perform search action - route name is search
@@ -229,7 +249,7 @@ $(document).ready(function () {
             // since we are getting data methos is assigned as GET
             type:"GET",
             // data are sent the server
-            data:{'BT_no':query},
+            data:{'BT_no':BT_no, 'class_year':class_year},
             // if search is succcessfully done, this callback function is called
             success:function (data) {
                 // print the search results in the div called country_list(id)

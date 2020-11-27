@@ -76,7 +76,7 @@ class BookBankController extends Controller
         ]);
         if($request->category == "p"){
             $checkBookAvailability = LibraryBook::where('book_no', $request->book_code)->first();
-            $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
+            $studentBT = StudentBT::where('id', $request->BT_no)->first();
                 // dd($studentBT);
             $session = AcademicYear::where('id', $studentBT->session)->first();
             if($checkBookAvailability->book_status == 1)
@@ -88,7 +88,7 @@ class BookBankController extends Controller
                     $increment_date = strtotime("+1 year", strtotime($date));  
                     $expected_date = date("Y-m-d", $increment_date);
                     $bookBank = new BookBank();
-                    $bookBank->BT_no = $request->BT_no;
+                    $bookBank->BT_no = $studentBT->id;
                     $bookBank->book_no = $request->book_code;
                     $bookBank->category = $request->category;
                     $bookBank->issue_date = $date;
@@ -108,7 +108,7 @@ class BookBankController extends Controller
         }
         else{
             $checkBookAvailability = StudentBook::where('book_no', $request->book_code)->first();
-            $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
+            $studentBT = StudentBT::where('id', $request->BT_no)->first();
                 // dd($studentBT);
             $session = AcademicYear::where('id', $studentBT->session)->first();
             if($checkBookAvailability->book_status == 1)
@@ -120,7 +120,7 @@ class BookBankController extends Controller
                     $increment_date = strtotime("+1 year", strtotime($date));  
                     $expected_date = date("Y-m-d", $increment_date);
                     $bookBank = new BookBank();
-                    $bookBank->BT_no = $request->BT_no;
+                    $bookBank->BT_no = $studentBT->id;
                     $bookBank->book_no = $request->book_code;
                     $bookBank->category = $request->category;
                     $bookBank->issue_date = $date;
@@ -149,8 +149,8 @@ class BookBankController extends Controller
     public function show($id)
     {
         $studentBT = StudentBT::findorfail($id);
-        $bookBank = BookBank::where('BT_no', $studentBT->BT_no)->where('category', '=', 'p')->get();
-        $generalBookBank = BookBank::where('BT_no', $studentBT->BT_no)->where('category', '=', 'g')->get();
+        $bookBank = BookBank::where('BT_no', $studentBT->id)->where('category', '=', 'p')->get();
+        $generalBookBank = BookBank::where('BT_no', $studentBT->id)->where('category', '=', 'g')->get();
         return view('auth.bookBank.show', compact('studentBT','bookBank', 'generalBookBank'));
     }
 

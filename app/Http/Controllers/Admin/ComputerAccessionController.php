@@ -27,14 +27,14 @@ class ComputerAccessionController extends Controller
             if($request->academic)
             {
               
-                $data = DB::table('computer_accessions')->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'computer_accessions.BT_no')
+                $data = DB::table('computer_accessions')->join('student_b_t_s', 'student_b_t_s.id', '=', 'computer_accessions.BT_no')
                 ->join('computers', 'computers.id', '=', 'computer_accessions.system_no')
-                ->select('computer_accessions.id','computer_accessions.start_time','computer_accessions.end_time','computer_accessions.BT_no', 'student_b_t_s.name', 'computers.system_no')->where('start_time', 'LIKE', $request->academic.'%')->get();
+                ->select('computer_accessions.id','computer_accessions.start_time','computer_accessions.end_time','student_b_t_s.BT_no', 'student_b_t_s.name','student_b_t_s.class_year' ,'computers.system_no')->where('start_time', 'LIKE', $request->academic.'%')->get();
             }
             else{
-                $data = DB::table('computer_accessions')->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'computer_accessions.BT_no')
+                $data = DB::table('computer_accessions')->join('student_b_t_s', 'student_b_t_s.id', '=', 'computer_accessions.BT_no')
                 ->join('computers', 'computers.id', '=', 'computer_accessions.system_no')
-                ->select('computer_accessions.id','computer_accessions.start_time','computer_accessions.end_time','computer_accessions.BT_no', 'student_b_t_s.name', 'computers.system_no');
+                ->select('computer_accessions.id','computer_accessions.start_time','computer_accessions.end_time','student_b_t_s.BT_no', 'student_b_t_s.name','student_b_t_s.class_year' ,'computers.system_no');
                 // dd($data);
             }
             return datatables()->of($data)
@@ -87,16 +87,17 @@ class ComputerAccessionController extends Controller
     {
         $request->validate([
             'BT_no' => 'required',
+            'class_year' => 'required',
             'start_time' => 'required',
             'system_no' => 'required',
         ]);
-        $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
+        $studentBT = StudentBT::where('BT_no', $request->BT_no)->where('class_year', $request->class_year)->first();
         $session = AcademicYear::where('id', $studentBT->session)->first();
         $date = date('Y/m/d H:i:s');
         if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
         {
             $computerAccession = new ComputerAccession();
-            $computerAccession->BT_no = $request->BT_no;
+            $computerAccession->BT_no = $studentBT->id;
             $computerAccession->system_no = $request->system_no;
             $computerAccession->start_time = $request->start_time;
             $computerAccession->save();

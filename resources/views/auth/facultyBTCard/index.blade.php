@@ -56,14 +56,25 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group ">
-                                    <label>Session</label>
-                                    <select class="form-control form-control-user @error('session') is-invalid @enderror" name="session" id="exampleInputName">
-                                        <option value="">- Select Session -</option>
-                                        @foreach($academicYear as $a)
-                                        <option value="{{ $a->id }}">({{ $a->from_academic_year }}) - ({{ $a->to_academic_year }})</option>
+                                    <label>Department</label>
+                                    <select class="form-control form-control-user @error('department') is-invalid @enderror" name="department" id="exampleInputName">
+                                        <option value="">- Select Department -</option>
+                                        @foreach($department as $d)
+                                        <option value="{{ $d->id }}">{{ $d->department }}</option>
                                         @endforeach
                                     </select>
                                     @error('session')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    <label>Designation</label>
+                                    <input type="text" class="form-control form-control-user @error('designation') is-invalid @enderror" name="designation" id="designation" placeholder="Enter Designation" value="{{ old('designation') }}">
+                                    @error('designation')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -91,14 +102,10 @@
           <h6 class="m-0 font-weight-bold text-primary">Faculty BT Card List</h6>
         </div>
         <div class="col-md-4">
-          <?php
-              $date = date('Y-m-d');
-          ?>
-          <select class="form-control form-control-user @error('academic_year') is-invalid @enderror" name="academic_year" id="academic_year">
-            <option value="">- Select Academic Year -</option>
-            @foreach($academicYear as $a)
-            <option value="{{ $a->id }}" @if (($date >= $a->from_academic_year) && ($date <= $a->to_academic_year)) selected @endif
-  >({{ $a->from_academic_year }}) - ({{ $a->to_academic_year }})</option>
+          <select class="form-control form-control-user @error('department') is-invalid @enderror" id="department">
+            <option value="">- Select Department -</option>
+            @foreach($department as $d)
+            <option value="{{ $d->id }}">{{ $d->department }}</option>
             @endforeach
           </select>
         </div>
@@ -112,7 +119,8 @@
               <th>Sr. No.</th>
               <th>BT Card No.</th>
               <th>Name</th>
-              <th>Session</th>
+              <th>Department</th>
+              <th>Designation</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -121,7 +129,8 @@
               <th>Sr. No.</th>
               <th>BT Card No.</th>
               <th>Name</th>
-              <th>Session</th>
+              <th>Department</th>
+              <th>Designation</th>
               <th>Action</th>
             </tr>
           </tfoot>
@@ -145,7 +154,7 @@
 <script>
 $(document).ready(function(){
   fetch_data();
-  function fetch_data(academic = '')
+  function fetch_data(department = '')
   {
     // alert(academic_year = '');
     $('#data_table').DataTable({
@@ -153,25 +162,26 @@ $(document).ready(function(){
     serverSide: true,
     ajax: {
       url: "{{ route('admin.faculty-bt-card.index') }}",
-      data: {academic:academic}
+      data: {department:department}
     },
     columns: [
     { data: 'id', name: 'id' },
     { data: 'BT_no', name: 'BT_no' },
     { data: 'name', name: 'name' },
-    { data: 'session', name: 'session' },
+    { data: 'department', name: 'department' },
+    { data: 'designation', name: 'designation' },
     {data: 'action', name: 'action', orderable: false},
     ],
     order: [[0, 'asc']],
     });
   }
-  $('#academic_year').change(function(){
-  var academic_id = $('#academic_year').val();
+  $('#department').change(function(){
+  var department_id = $('#department').val();
 //  alert(academic_id);
 
   $('#data_table').DataTable().destroy();
  
-  fetch_data(academic_id);
+  fetch_data(department_id);
  });
   
 });

@@ -57,14 +57,25 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group ">
-                                    <label>Session</label>
-                                    <select class="form-control form-control-user @error('session') is-invalid @enderror" name="session" id="exampleInputName">
-                                        <option value="">- Select Session -</option>
-                                        @foreach($academicYear as $a)
-                                        <option value="{{ $a->id }}" {{ ($a->id == $facultyBT->session) ? 'selected=selected' : '' }}>({{ $a->from_academic_year }}) - ({{ $a->to_academic_year }})</option>
+                                    <label>Department</label>
+                                    <select class="form-control form-control-user @error('department') is-invalid @enderror" name="department" id="exampleInputName">
+                                        <option value="">- Select Department -</option>
+                                        @foreach($department as $a)
+                                        <option value="{{ $a->id }}" {{ ($a->id == $facultyBT->department) ? 'selected=selected' : '' }}>{{ $a->department }}</option>
                                         @endforeach
                                     </select>
-                                    @error('session')
+                                    @error('department')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    <label>Designation</label>
+                                    <input type="text" class="form-control form-control-user @error('designation') is-invalid @enderror" name="designation" id="designation" placeholder="Enter Designation" value="{{ $facultyBT->designation }}">
+                                    @error('designation')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

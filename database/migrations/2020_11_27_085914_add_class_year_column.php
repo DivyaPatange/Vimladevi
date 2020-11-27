@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFacultyBTSTable extends Migration
+class AddClassYearColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateFacultyBTSTable extends Migration
      */
     public function up()
     {
-        Schema::create('faculty_b_t_s', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('BT_no');
-            $table->string('name');
-            $table->string('department');
-            $table->timestamps();
+        Schema::table('book_transactions', function($table){
+            $table->string('class_year')->nullable()->after('BT_no');
         });
     }
 
@@ -29,6 +25,6 @@ class CreateFacultyBTSTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('faculty_b_t_s');
+        //
     }
 }

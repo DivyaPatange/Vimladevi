@@ -26,12 +26,12 @@ class LibraryAccessionController extends Controller
             if($request->academic)
             {
               
-                $data = DB::table('library_accessions')->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'library_accessions.BT_no')
-                ->select('library_accessions.*', 'student_b_t_s.name')->where('start_time', 'LIKE', $request->academic.'%')->get();
+                $data = DB::table('library_accessions')->join('student_b_t_s', 'student_b_t_s.id', '=', 'library_accessions.BT_no')
+                ->select('library_accessions.start_time', 'library_accessions.end_time', 'library_accessions.id', 'student_b_t_s.name', 'student_b_t_s.class_year', 'student_b_t_s.BT_no')->where('start_time', 'LIKE', $request->academic.'%')->get();
             }
             else{
-                $data = DB::table('library_accessions')->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'library_accessions.BT_no')
-                ->select('library_accessions.*', 'student_b_t_s.name');
+                $data = DB::table('library_accessions')->join('student_b_t_s', 'student_b_t_s.id', '=', 'library_accessions.BT_no')
+                ->select('library_accessions.start_time', 'library_accessions.end_time', 'library_accessions.id', 'student_b_t_s.name', 'student_b_t_s.class_year', 'student_b_t_s.BT_no');
                 // dd($data);
             }
             return datatables()->of($data)
@@ -84,15 +84,16 @@ class LibraryAccessionController extends Controller
     {
         $request->validate([
             'BT_no' => 'required',
+            'class_year' => 'required',
             'start_time' => 'required',
         ]);
-        $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
+        $studentBT = StudentBT::where('BT_no', $request->BT_no)->where('class_year', $request->class_year)->first();
         $session = AcademicYear::where('id', $studentBT->session)->first();
         $date = date('Y/m/d H:i:s');
         if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
         {
             $libraryAccession = new LibraryAccession();
-            $libraryAccession->BT_no = $request->BT_no;
+            $libraryAccession->BT_no = $studentBT->id;
             $libraryAccession->start_time = $request->start_time;
             $libraryAccession->save();
             return redirect('/admin/libraryAccession')->with('success', 'Library Accessed');

@@ -156,7 +156,7 @@ $(document).ready(function(){
                   @enderror
                 </div>
                 <input type="hidden" name="category" value="p">
-                <input type="hidden" name="BT_no" value="{{ $studentBT->BT_no }}">
+                <input type="hidden" name="BT_no" value="{{ $studentBT->id }}">
                 <div class="form-group " id="book_name">
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -309,7 +309,7 @@ $(document).ready(function(){
                   @enderror
                 </div>
                 <input type="hidden" name="category" value="g">
-                <input type="hidden" name="BT_no" value="{{ $studentBT->BT_no }}">
+                <input type="hidden" name="BT_no" value="{{ $studentBT->id }}">
                 <div class="form-group " id="general_book_name">
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">

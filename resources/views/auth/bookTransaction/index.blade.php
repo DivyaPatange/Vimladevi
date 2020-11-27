@@ -56,6 +56,17 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Class Year</label>
+                      <input type="text" class="form-control form-control-user @error('class_year') is-invalid @enderror" name="class_year" id="class_year" >
+                    </div>
+                    @error('class_year')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+                <div class="col-md-12">
                     <div class="form-group" id="student_name">
                     </div>
                 </div>
@@ -64,7 +75,7 @@
         <!-- Modal footer -->
         <div class="modal-footer">
             <input type="submit" class="btn btn-success" name="submit" value="Save">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-dark" id="searchStudent">Search</button>
         </div>
     </form>
     </div>
@@ -99,6 +110,7 @@
             <tr>
               <th>Sr. No.</th>
               <th>BT Card No.</th>
+              <th>Class Year</th>
               <th>Student Name</th>
               <th>Issue Book</th>
           </thead>
@@ -106,6 +118,7 @@
             <tr>
             <th>Sr. No.</th>
             <th>BT Card No.</th>
+            <th>Class Year</th>
             <th>Student Name</th>
             <th>Issue Book</th>
             </tr>
@@ -131,9 +144,10 @@
 <script>
 $(document).ready(function () {
     // keyup function looks at the keys typed on the search box
-    $('#BT_no').on('keyup',function() {
+    $('#searchStudent').on('click',function() {
         // the text typed in the input field is assigned to a variable 
-        var query = $(this).val();
+        var BT_no = $('#BT_no').val();
+        var class_year = $('#class_year').val();
         // call to an ajax function
         $.ajax({
             // assign a controller function to perform search action - route name is search
@@ -141,7 +155,7 @@ $(document).ready(function () {
             // since we are getting data methos is assigned as GET
             type:"GET",
             // data are sent the server
-            data:{'BT_no':query},
+            data:{'BT_no':BT_no, 'class_year':class_year},
             // if search is succcessfully done, this callback function is called
             success:function (data) {
                 // print the search results in the div called country_list(id)
@@ -168,6 +182,7 @@ $(document).ready(function(){
     columns: [
     { data: 'id', name: 'id' },
     { data: 'BT_no', name: 'BT_no' },
+    { data: 'class_year', name: 'class_year' },
     { data: 'name', name: 'name' },
     {data: 'action', name: 'action', orderable: false},
     ],

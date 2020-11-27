@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Admin\FacultyBT;
 use App\Admin\AcademicYear;
+use App\Admin\Department;
 use Datatables;
 
 class FacultyBTCardController extends Controller
@@ -17,28 +18,28 @@ class FacultyBTCardController extends Controller
      */
     public function index(Request $request)
     {
-        $academicYear = AcademicYear::all();
+        $department = Department::all();
         if(request()->ajax()) 
         {
             // dd($request->academic);
-            if($request->academic)
+            if($request->department)
             {
-                $data = FacultyBT::where('session', $request->academic)->get();
+                $data = FacultyBT::where('department', $request->department)->get();
             }
             else{
                 $data = FacultyBT::all();
                 // dd($data);
             }
             return datatables()->of($data)
-            ->addColumn('session', function(FacultyBT $facultyBT){
-                return '('.$facultyBT->faculty_session->from_academic_year.') - ('.$facultyBT->faculty_session->to_academic_year.')';
+            ->addColumn('department', function(FacultyBT $facultyBT){
+                return $facultyBT->faculty_department->department;
             })
             ->addColumn('action', 'auth.facultyBTCard.action')
-            ->rawColumns(['session', 'action'])
+            ->rawColumns(['department', 'action'])
             ->addIndexColumn()
             ->make(true);
         }
-        return view('auth.facultyBTCard.index', compact( 'academicYear'));
+        return view('auth.facultyBTCard.index', compact( 'department'));
     }
 
     /**
@@ -62,13 +63,14 @@ class FacultyBTCardController extends Controller
         $request->validate([
             'BT_no' => 'required|unique:faculty_b_t_s',
             'name' => 'required', 
-            'session' => 'required',
+            'department' => 'required',
         ]);
         $id = mt_rand(100000,999999);
         $facultyBT = new FacultyBT();
         $facultyBT->BT_no = $request->BT_no;
         $facultyBT->name = $request->name;
-        $facultyBT->session = $request->session;
+        $facultyBT->department = $request->department;
+        $facultyBT->designation = $request->designation;
         $facultyBT->save();
         return redirect('/admin/faculty-bt-card')->with('success', 'Faculty BT Card added successfully!');
     }
@@ -93,8 +95,8 @@ class FacultyBTCardController extends Controller
     public function edit($id)
     {
         $facultyBT = FacultyBT::findorfail($id);
-        $academicYear = AcademicYear::all();
-        return view('auth.facultyBTCard.edit', compact('facultyBT', 'academicYear'));
+        $department = Department::all();
+        return view('auth.facultyBTCard.edit', compact('facultyBT', 'department'));
     }
 
     /**
@@ -109,12 +111,13 @@ class FacultyBTCardController extends Controller
         $request->validate([
             'BT_no' => 'unique:faculty_b_t_s,BT_no,'.$id,
             'name' => 'required',
-            'session' => 'required',
+            'department' => 'required',
         ]);
         $facultyBT = FacultyBT::findorfail($id);
         $facultyBT->BT_no = $request->BT_no;
         $facultyBT->name = $request->name;
-        $facultyBT->session = $request->session;
+        $facultyBT->department = $request->department;
+        $facultyBT->designation = $request->designation;
         $facultyBT->update($request->all());
         return redirect('/admin/faculty-bt-card')->with('success', 'Faculty BT Card updated successfully!');
     }

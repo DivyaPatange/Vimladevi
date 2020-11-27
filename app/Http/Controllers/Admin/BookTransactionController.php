@@ -34,12 +34,13 @@ class BookTransactionController extends Controller
             {
               
                 $data = DB::table('book_transactions')
-                ->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'book_transactions.BT_no')
+                ->join('student_b_t_s', 'student_b_t_s.id', '=', 'book_transactions.student_bt_id')
                 ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session')->where('student_b_t_s.session', $request->academic)->get();
+                // dd($data);
             }
             else{
                 $data = DB::table('book_transactions')
-                ->join('student_b_t_s', 'student_b_t_s.BT_no', '=', 'book_transactions.BT_no')
+                ->join('student_b_t_s', 'student_b_t_s.id', '=', 'book_transactions.student_bt_id')
                 ->select('book_transactions.*', 'student_b_t_s.name', 'student_b_t_s.session');
                 // dd($data);
             }
@@ -73,18 +74,21 @@ class BookTransactionController extends Controller
         $request->validate([
             'BT_no' => 'required',
         ]);
-        $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
+        $studentBT = StudentBT::where('BT_no', $request->BT_no)->where('class_year', $request->class_year)->first();
+        // dd($studentBT);
         $session = AcademicYear::where('id', $studentBT->session)->first();
         $date = date('Y/m/d H:i:s');
         if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
         {
-            $bookTransaction = BookTransaction::where('BT_no', $request->BT_no)->first();
+            $bookTransaction = BookTransaction::where('student_bt_id', $studentBT->id)->first();
+            // dd($bookTransaction);
             if(empty($bookTransaction)){
             // $increment_date = strtotime("+7 day", strtotime($date));
             // $expected_date = date("Y-m-d", $increment_date);
             $bookTransaction = new BookTransaction();
             $bookTransaction->BT_no = $request->BT_no;
-            // $bookTransaction->book_code = $request->book_code;
+            $bookTransaction->class_year = $request->class_year;
+            $bookTransaction->student_bt_id = $studentBT->id;
             // $bookTransaction->issue_date = $date;
             // $bookTransaction->expected_return_date = $expected_date;/
             $bookTransaction->save();
@@ -149,7 +153,8 @@ class BookTransactionController extends Controller
         if($request->ajax()) {
             // select country name from database
             $data = StudentBT::where('BT_no', 'LIKE', $request->BT_no.'%')
-                ->get();
+            ->where('class_year', 'LIKE', $request->class_year.'%')
+            ->get();
                 
         
             // declare an empty array for output
@@ -239,7 +244,7 @@ class BookTransactionController extends Controller
     public function studentBookIssueForm($id)
     {
         $BT_no = BookTransaction::findorfail($id);
-        $studentBT = StudentBT::where('BT_no', $BT_no->BT_no)->first();
+        $studentBT = StudentBT::where('id', $BT_no->student_bt_id)->first();
         $issueBook = StudentBookIssue::where('bookTransaction_id', $id)->where('category', '=', 'p')->get();
         $generalBook = StudentBookIssue::where('bookTransaction_id', $id)->where('category', '=', 'g')->get();
         // dd($issueBook);
