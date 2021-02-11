@@ -4,6 +4,9 @@
 
 <link href="{{ asset('adminAsset/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
 $(document).ready(function(){
   $("#searchButton").click(function(){
@@ -109,11 +112,10 @@ $(document).ready(function(){
               Add Book 
             </div>
             <div class="card-body">
-              <form method="post" action="{{ route('admin.departmentLibrary.store') }}">
-              @csrf 
+              <form method="post" id="form-submit">
                 
                 <div class="form-group ">
-                  <label>Book Code</label>
+                  <label>Book Code<span style="color:red;">*</span><span  style="color:red" id="book_code_err"> </span></label>
                   <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
                   @error('book_code')
                   <span class="invalid-feedback" role="alert">
@@ -123,9 +125,9 @@ $(document).ready(function(){
                 </div>
                 <div class="form-group" id="book_name">
                 </div>
-                <input type="hidden" name="category" value="p">
-                <input type="hidden" name="department_id" value="{{ $department->id }}">
-                <button type="submit" class="btn btn-primary btn-user btn-block">
+                <input type="hidden" name="category" value="p" id="category">
+                <input type="hidden" name="department_id" id="department_id" value="{{ $department->id }}">
+                <button type="button" id="submitForm" class="btn btn-primary btn-user btn-block">
                   Add
                 </button>
               </form>
@@ -147,6 +149,7 @@ $(document).ready(function(){
                   <th>Book No.</th>
                   <th>Book Name</th>
                   <th>Allocation Date</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tfoot>
@@ -155,20 +158,10 @@ $(document).ready(function(){
                   <th>Book No.</th>
                   <th>Book Name</th>
                   <th>Allocation Date</th>
+                  <th>Action</th>
                 </tr>
               </tfoot>
               <tbody>
-              @foreach($departmentBook as $key=>$dB)
-              <tr>
-                <td>{{ ++$key }}</td>
-                <td>{{ $dB->book_no }}</td>
-                <?php
-                  $bookName = DB::table('library_books')->where('book_no', $dB->book_no)->first();
-                ?>
-                <td>@if(isset($bookName) && !empty($bookName)){{ $bookName->book_name }}@endif</td>
-                <td>{{ $dB->allocation_date }}</td>
-              </tr>
-              @endforeach
               </tbody>
             </table>
           </div>
@@ -184,11 +177,10 @@ $(document).ready(function(){
               Add Book 
             </div>
             <div class="card-body">
-              <form method="post" action="{{ route('admin.departmentLibrary.store') }}">
-              @csrf 
+              <form method="post" id="form-submit1">
                 
                 <div class="form-group ">
-                  <label>Book Code</label>
+                  <label>Book Code<span style="color:red;">*</span><span  style="color:red" id="general_book_code_err"> </span></label>
                   <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="general_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
                   @error('book_code')
                   <span class="invalid-feedback" role="alert">
@@ -198,9 +190,9 @@ $(document).ready(function(){
                 </div>
                 <div class="form-group" id="general_book_name">
                 </div>
-                <input type="hidden" name="category" value="g">
-                <input type="hidden" name="department_id" value="{{ $department->id }}">
-                <button type="submit" class="btn btn-primary btn-user btn-block">
+                <input type="hidden" name="category" id="category1" value="g">
+                <input type="hidden" name="department_id" id="department_id1" value="{{ $department->id }}">
+                <button type="button" id="submitForm1" class="btn btn-primary btn-user btn-block">
                   Add
                 </button>
               </form>
@@ -222,6 +214,7 @@ $(document).ready(function(){
                   <th>Book No.</th>
                   <th>Book Name</th>
                   <th>Allocation Date</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tfoot>
@@ -230,20 +223,10 @@ $(document).ready(function(){
                   <th>Book No.</th>
                   <th>Book Name</th>
                   <th>Allocation Date</th>
+                  <th>Action</th>
                 </tr>
               </tfoot>
               <tbody>
-              @foreach($generalDepartmentBook as $key=>$dB)
-              <tr>
-                <td>{{ ++$key }}</td>
-                <td>{{ $dB->book_no }}</td>
-                <?php
-                  $bookName = DB::table('student_books')->where('book_no', $dB->book_no)->first();
-                ?>
-                <td>@if(isset($bookName) && !empty($bookName)){{ $bookName->book_name }}@endif</td>
-                <td>{{ $dB->allocation_date }}</td>
-              </tr>
-              @endforeach
               </tbody>
             </table>
           </div>
@@ -253,6 +236,92 @@ $(document).ready(function(){
   </div>
 </div>
 <!-- /.container-fluid -->
+
+<!-- General Book Model -->
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Book</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form method="POST" id="editForm">
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="form-group ">
+          <label>Book Code<span style="color:red;">*</span><span  style="color:red" id="edit_gb_err"> </span></label>
+          <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="edit_general_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+          @error('book_code')
+          <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+          </span>
+          @enderror
+        </div>
+        <div class="form-group" id="edit_general_book_name">
+        </div>
+        <div class="form-group">
+          <label for="">Allocation Date<span style="color:red;">*</span><span  style="color:red" id="allocation_date_err"> </span></label>
+          <input type="date" name="allocation_date" class="form-control" id="allocation_date">
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <input type="hidden" name="id" id="general_book_id">
+        <button type="button" class="btn btn-primary" onclick="return checkSubmit()" id="editButton">Update</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Pustak Pedhi Modal -->
+<!-- The Modal -->
+<div class="modal" id="myModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Book</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form method="POST" id="editForm1">
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="form-group ">
+          <label>Book Code<span style="color:red;">*</span><span  style="color:red" id="edit_pb_err"> </span></label>
+          <input type="text" class="form-control form-control-user @error('book_code') is-invalid @enderror" name="book_code" id="edit_book_code" placeholder="Enter Book Code" value="{{ old('book_code') }}">
+          @error('book_code')
+          <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+          </span>
+          @enderror
+        </div>
+        <div class="form-group" id="edit_book_name">
+        </div>
+        <div class="form-group">
+          <label for="">Allocation Date<span style="color:red;">*</span><span  style="color:red" id="edit_ad_err"> </span></label>
+          <input type="date" name="allocation_date" class="form-control" id="allocation_date1">
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <input type="hidden" name="id" id="pustak_book_id">
+        <button type="button" class="btn btn-primary" onclick="return checkSubmit1()" id="editButton1">Update</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      </form>
+
+    </div>
+  </div>
+</div>
 @endsection
 @section('customjs')
 <!-- Page level plugins -->
@@ -262,11 +331,49 @@ $(document).ready(function(){
 <!-- Page level custom scripts -->
 <script src="{{ asset('adminAsset/js/demo/datatables-demo.js') }}"></script>
 <script>
-$(document).ready(function() {
-  $('#dataTable').DataTable();
+// $(document).ready(function() {
+//   $('#dataTable').DataTable();
+// });
+// $(document).ready(function() {
+//   $('#dataTable1').DataTable();
+// });
+
+var SITEURL = '{{ route('admin.viewDepartmentBook', $department->id) }}';
+var category = "g";
+var category1 = "p";
+$('#dataTable1').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+    url: SITEURL,
+    type: 'GET',
+    data: {category:category},
+    },
+    columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false,searchable: false},
+            { data: 'book_no', name: 'book_no' },
+            { data: 'book_name', name: 'book_name' },
+            { data: 'allocation_date', name: 'allocation_date' },
+            {data: 'action', name: 'action', orderable: false},
+        ],
+    order: [[0, 'desc']]
 });
-$(document).ready(function() {
-  $('#dataTable1').DataTable();
+$('#dataTable').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+    url: SITEURL,
+    type: 'GET',
+    data: {category1:category1},
+    },
+    columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false,searchable: false},
+            { data: 'book_no', name: 'book_no' },
+            { data: 'book_name', name: 'book_name' },
+            { data: 'allocation_date', name: 'allocation_date' },
+            {data: 'action', name: 'action', orderable: false},
+        ],
+    order: [[0, 'desc']]
 });
 </script>
 <script>
@@ -287,6 +394,28 @@ $(document).ready(function () {
             success:function (data) {
                 // print the search results in the div called country_list(id)
                 $('#book_name').html(data);
+            }
+        })
+        // end of ajax call
+    });
+})
+$(document).ready(function () {
+    // keyup function looks at the keys typed on the search box
+    $('#edit_book_code').on('keyup',function() {
+        // the text typed in the input field is assigned to a variable 
+        var query = $(this).val();
+        // call to an ajax function
+        $.ajax({
+            // assign a controller function to perform search action - route name is search
+            url:"{{ route('admin.searchBookCode') }}",
+            // since we are getting data methos is assigned as GET
+            type:"GET",
+            // data are sent the server
+            data:{'book_code':query},
+            // if search is succcessfully done, this callback function is called
+            success:function (data) {
+                // print the search results in the div called country_list(id)
+                $('#edit_book_name').html(data);
             }
         })
         // end of ajax call
@@ -317,6 +446,29 @@ $(document).ready(function () {
 })
 $(document).ready(function () {
     // keyup function looks at the keys typed on the search box
+    $('#edit_general_book_code').on('keyup',function() {
+        // the text typed in the input field is assigned to a variable 
+        var query = $(this).val();
+        // alert(query);
+        // call to an ajax function
+        $.ajax({
+            // assign a controller function to perform search action - route name is search
+            url:"{{ route('admin.searchGeneralBookCode') }}",
+            // since we are getting data methos is assigned as GET
+            type:"GET",
+            // data are sent the server
+            data:{'general_book_code':query},
+            // if search is succcessfully done, this callback function is called
+            success:function (data) {
+                // print the search results in the div called country_list(id)
+                $('#edit_general_book_name').html(data);
+            }
+        })
+        // end of ajax call
+    });
+})
+$(document).ready(function () {
+    // keyup function looks at the keys typed on the search box
     $('#book_no_search').on('click',function() {
       // the text typed in the input field is assigned to a variable 
       var query = $("#search_book_no").val();
@@ -334,6 +486,7 @@ $(document).ready(function () {
       }
     })
 });
+
 $(document).ready(function () {
     // keyup function looks at the keys typed on the search box
     $('#book_name_search').on('click',function() {
@@ -378,6 +531,251 @@ $(document).ready(function () {
    $.ajaxSetup({
   headers: {
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+
+$('body').on('click', '#submitForm', function () {
+    var book_code = $("#book_code").val();
+    var category = $("#category").val();
+    var department_id = $("#department_id").val();
+    if (book_code=="") {
+        $("#book_code_err").fadeIn().html("Required");
+        setTimeout(function(){ $("#book_code_err").fadeOut(); }, 3000);
+        $("#book_code").focus();
+        return false;
+    }
+    else
+    { 
+        var datastring="book_code="+book_code+"&category="+category+"&department_id="+department_id;
+        // alert(datastring);
+        $.ajax({
+            type:"POST",
+            url:"{{ route('admin.departmentLibrary.store') }}",
+            data:datastring,
+            cache:false,        
+            success:function(returndata)
+            {
+                document.getElementById("form-submit").reset();
+                var oTable = $('#dataTable').dataTable(); 
+                oTable.fnDraw(false);
+                if(returndata.success){
+                toastr.success(returndata.success);
+                }
+                else{
+                  // $("#book_name").hide();
+                toastr.error(returndata.error)
+                }
+            // location.reload();
+            // $("#pay").val("");
+            }
+        });
+    }
+})
+$('body').on('click', '#submitForm1', function () {
+    var book_code = $("#general_book_code").val();
+    var category = $("#category1").val();
+    var department_id = $("#department_id1").val();
+    if (book_code=="") {
+        $("#general_book_code_err").fadeIn().html("Required");
+        setTimeout(function(){ $("#general_book_code_err").fadeOut(); }, 3000);
+        $("#general_book_code").focus();
+        return false;
+    }
+    else
+    { 
+        var datastring="book_code="+book_code+"&category="+category+"&department_id="+department_id;
+        // alert(datastring);
+        $.ajax({
+            type:"POST",
+            url:"{{ route('admin.departmentLibrary.store') }}",
+            data:datastring,
+            cache:false,        
+            success:function(returndata)
+            {
+                document.getElementById("form-submit1").reset();
+                var oTable = $('#dataTable1').dataTable(); 
+                oTable.fnDraw(false);
+                if(returndata.success){
+                toastr.success(returndata.success);
+                }
+                else{
+                  // $("#book_name").hide();
+                toastr.error(returndata.error)
+                }
+            // location.reload();
+            // $("#pay").val("");
+            }
+        });
+    }
+})
+function EditModel(obj,bid)
+{
+    var datastring="bid="+bid;
+    // alert(datastring);
+    $.ajax({
+        type:"POST",
+        url:"{{ route('admin.get.general-book') }}",
+        data:datastring,
+        cache:false,        
+        success:function(returndata)
+        {
+            // alert(returndata);
+          if (returndata!="0") {
+            
+            var json = JSON.parse(returndata);
+            $("#myModal").modal('show');
+            $("#general_book_id").val(json.id);
+            $("#edit_general_book_code").val(json.book_no);
+            $("#allocation_date").val(json.allocation_date);
+          }
+        }
+    });
+}
+function EditModel1(obj,bid)
+{
+    var datastring="bid="+bid;
+    // alert(datastring);
+    $.ajax({
+        type:"POST",
+        url:"{{ route('admin.get.pustak-book') }}",
+        data:datastring,
+        cache:false,        
+        success:function(returndata)
+        {
+            // alert(returndata);
+          if (returndata!="0") {
+            
+            var json = JSON.parse(returndata);
+            $("#myModal1").modal('show');
+            $("#pustak_book_id").val(json.id);
+            $("#edit_book_code").val(json.book_no);
+            $("#allocation_date1").val(json.allocation_date);
+          }
+        }
+    });
+}
+function checkSubmit()
+{
+    var book_no = $("#edit_general_book_code").val();
+    var allocation_date = $("#allocation_date").val();
+    var id = $("#general_book_id").val().trim();
+    if (book_no=="") {
+        $("#edit_gb_err").fadeIn().html("Required");
+        setTimeout(function(){ $("#edit_gb_err").fadeOut(); }, 3000);
+        $("#edit_general_book_code").focus();
+        return false;
+    }
+    if (allocation_date=="") {
+        $("#allocation_date_err").fadeIn().html("Required");
+        setTimeout(function(){ $("#allocation_date_err").fadeOut(); }, 3000);
+        $("#allocation_date").focus();
+        return false;
+    }
+    else
+    { 
+        $('#editButton').attr('disabled',true);
+        var datastring="book_no="+book_no+"&allocation_date="+allocation_date+"&id="+id;
+        // alert(datastring);
+        $.ajax({
+            type:"POST",
+            url:"{{ url('/admin/general-book/update') }}",
+            data:datastring,
+            cache:false,        
+            success:function(returndata)
+            {
+              console.log(returndata.success);
+            $('#editButton').attr('disabled',false);
+            $("#myModal").modal('hide');
+            var oTable = $('#dataTable1').dataTable(); 
+            oTable.fnDraw(false);
+            if(returndata.success){
+            toastr.success(returndata.success);
+            }
+            else{
+              toastr.error(returndata.error);
+            }
+            
+            }
+        });
+    }
+}
+function checkSubmit1()
+{
+  var book_no = $("#edit_book_code").val();
+  var allocation_date = $("#allocation_date1").val();
+  var id = $("#pustak_book_id").val().trim();
+  if (book_no=="") {
+    $("#edit_pb_err").fadeIn().html("Required");
+    setTimeout(function(){ $("#edit_pb_err").fadeOut(); }, 3000);
+    $("#edit_book_code").focus();
+    return false;
+  }
+  if (allocation_date=="") {
+    $("#edit_ad_err").fadeIn().html("Required");
+    setTimeout(function(){ $("#edit_ad_err").fadeOut(); }, 3000);
+    $("#allocation_dat1e").focus();
+    return false;
+  }
+  else
+  { 
+    $('#editButton1').attr('disabled',true);
+    var datastring="book_no="+book_no+"&allocation_date="+allocation_date+"&id="+id;
+    // alert(datastring);
+    $.ajax({
+      type:"POST",
+      url:"{{ url('/admin/pustak-book/update') }}",
+      data:datastring,
+      cache:false,        
+      success:function(returndata)
+      {
+        console.log(returndata.success);
+        $('#editButton1').attr('disabled',false);
+        $("#myModal1").modal('hide');
+        var oTable = $('#dataTable').dataTable(); 
+        oTable.fnDraw(false);
+        if(returndata.success){
+        toastr.success(returndata.success);
+        }
+        else{
+          toastr.error(returndata.error);
+        }
+        
+      }
+    });
+  }
+}
+$('body').on('click', '#delete', function () {
+  var id = $(this).data("id");
+  if(confirm("Are You sure want to delete !")){
+    $.ajax({
+      type: "delete",
+      url: "{{ url('admin/book') }}"+'/'+id,
+      success: function (data) {
+      var oTable = $('#dataTable1').dataTable(); 
+      oTable.fnDraw(false);
+      toastr.success(data.success);
+      },
+      error: function (data) {
+        console.log('Error:', data);
+      }
+    });
+  }
+});
+$('body').on('click', '#delete1', function () {
+  var id = $(this).data("id");
+  if(confirm("Are You sure want to delete !")){
+    $.ajax({
+      type: "delete",
+      url: "{{ url('admin/book') }}"+'/'+id,
+      success: function (data) {
+      var oTable = $('#dataTable').dataTable(); 
+      oTable.fnDraw(false);
+      toastr.success(data.success);
+      },
+      error: function (data) {
+        console.log('Error:', data);
+      }
+    });
   }
 });
 </script>

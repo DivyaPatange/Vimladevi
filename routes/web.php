@@ -58,6 +58,11 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:admi
     Route::post('/updateComputerAccessionTime', 'ComputerAccessionController@updateComputerAccessionTime')->name('computerAccession.updatetime');
     Route::resource('/departmentLibrary', 'DepartmentLibraryController');
     Route::get('/departmentBooks/{id}', 'DepartmentLibraryController@viewDepartmentBook')->name('viewDepartmentBook');
+    Route::post('/get/general-book', 'DepartmentLibraryController@getGeneralBook')->name('get.general-book');
+    Route::post('/general-book/update', 'DepartmentLibraryController@updateGeneralBook');
+    Route::post('/get/pustak-book', 'DepartmentLibraryController@getPustakBook')->name('get.pustak-book');
+    Route::post('/pustak-book/update', 'DepartmentLibraryController@updatePustakBook');
+    Route::delete('/book/{id}', 'DepartmentLibraryController@departmentRecordDelete');
     Route::resource('/magazines', 'MagazineController');
     Route::resource('/bookBank', 'BookBankController');
     Route::post('/bookBank/submit', 'BookBankController@submit')->name('bookBank.submit');

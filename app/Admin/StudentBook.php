@@ -17,4 +17,8 @@ class StudentBook extends Model
            DB::table('student_books')->insert($data);
         }
      }
+
+   public function department_library(){
+      return $this->hasMany('App\Admin\DepartmentLibrary','book_no', 'book_no');
+   }
 }
