@@ -11,6 +11,29 @@
 |
 */
 
+
+Route::get('/clear-cache', function () {
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    return 'DONE'; //Return anything
+});
+
+Route::get('/migrate', function () {
+    $exitCode = Artisan::call('migrate');
+    return 'DONE'; //Return anything
+});
+
+Route::get('/routeList', function () {
+    $exitCode = Artisan::call('route:list');
+    return Artisan::output(); //Return anything
+});
+
+Route::get('/seed', function () {
+    $exitCode = Artisan::call('db:seed');
+    return 'DONE'; //Return anything
+});
+
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -38,6 +61,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:admi
     Route::resource('/sellers', 'SellerController');
     Route::resource('/publications', 'PublicationController');
     Route::resource('/student-bt-card', 'StudentBTCardController');
+    Route::post('/getStudentBT', 'StudentBTCardController@getStudentBT')->name('get.studentBT');
+    Route::post('/promote/BTCard', 'StudentBTCardController@promoteBTCard');
     Route::resource('/faculty-bt-card', 'FacultyBTCardController');
     Route::resource('/rack-with-wing', 'RackWingController');
     Route::resource('/libraryBook', 'LibraryBookController');

@@ -137,6 +137,39 @@ class StudentBTCardController extends Controller
         return view('auth.studentBTCard.edit', compact('studentBT', 'course', 'department', 'academicYear'));
     }
 
+    public function getStudentBT(Request $request)
+    {
+        $studentBT = StudentBT::where('id', $request->bid)->first();
+        if (!empty($studentBT)) 
+        {
+            $data = array('id' =>$studentBT->id,'name' =>$studentBT->name,'class' =>$studentBT->class, 'department' => $studentBT->department, 'BT_no' => $studentBT->BT_no
+            );
+        }else{
+            $data =0;
+        }
+        echo json_encode($data);
+    }
+
+    public function promoteBTCard(Request $request)
+    {
+        $studentBT = new StudentBT();
+        $studentBT->BT_no = $request->BT_no;
+        $studentBT->name = $request->name;
+        $studentBT->class = $request->classes;
+        $studentBT->class_year = $request->class_year;
+        $studentBT->department = $request->department;
+        $studentBT->session = $request->session;
+        $studentBT->book_bank = $request->book_bank;
+        $studentBT->save();
+        
+        if($studentBT->save())
+        {
+            $BTCard = StudentBT::where('id', $request->id)->update(['bt_id' => $request->id]);
+        }
+        return response()->json(['success' => 'BT Card Added Successfully']);
+        // return $request->book_bank;
+    }
+
     /**
      * Update the specified resource in storage.
      *

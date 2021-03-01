@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class StudentBT extends Model
 {
     protected $table = "student_b_t_s";
-    protected $fillable = ['BT_no', 'name', 'class','department','session', 'book_bank', 'class_year'];
+    protected $fillable = ['BT_no', 'name', 'class','department','session', 'book_bank', 'class_year', 'bt_id'];
 
     public function course(){
         return $this->belongsTo('App\Admin\Course','class', 'id');
