@@ -78,8 +78,8 @@ class BookTransactionController extends Controller
         // dd($studentBT);
         $session = AcademicYear::where('id', $studentBT->session)->first();
         $date = date('Y/m/d H:i:s');
-        if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
-        {
+        // if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
+        // {
             $bookTransaction = BookTransaction::where('student_bt_id', $studentBT->id)->first();
             // dd($bookTransaction);
             if(empty($bookTransaction)){
@@ -97,10 +97,10 @@ class BookTransactionController extends Controller
             else{
                 return redirect('/admin/bookTransaction')->with('danger', 'BT Card is already registered!');
             }
-        }
-        else{
-            return redirect('/admin/bookTransaction')->with('danger', 'BT Card is Expired!');
-        }
+        // }
+        // else{
+        //     return redirect('/admin/bookTransaction')->with('danger', 'BT Card is Expired!');
+        // }
     }
 
     /**
@@ -263,9 +263,9 @@ class BookTransactionController extends Controller
             {
                 $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
                 $session = AcademicYear::where('id', $studentBT->session)->first();
-                $date = date('Y/m/d H:i:s');
-                if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
-                {
+                $date = $request->issue_date;
+                // if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
+                // {
                     $increment_date = strtotime("+10 day", strtotime($date));
                     $expected_date = date("Y-m-d", $increment_date);
                     // $bookTransaction->book_code = $request->book_code;
@@ -285,10 +285,10 @@ class BookTransactionController extends Controller
                     }
                     $bookStatus = LibraryBook::where('book_no', $request->book_code)->update(['book_status' => 0]);
                     return Redirect::back()->with('success', 'Book Issue Successfully');
-                }
-                else{
-                    return Redirect::back()->with('danger', 'BT Card is expired!');
-                }
+                // }
+                // else{
+                //     return Redirect::back()->with('danger', 'BT Card is expired!');
+                // }
             }
             else{
                 return Redirect::back()->with('danger', 'Book is not available!');
@@ -300,11 +300,12 @@ class BookTransactionController extends Controller
             {
                 $studentBT = StudentBT::where('BT_no', $request->BT_no)->first();
                 $session = AcademicYear::where('id', $studentBT->session)->first();
-                $date = date('Y/m/d H:i:s');
-                if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
-                {
+                $date = $request->issue_date;
+                // if(($date >= $session->from_academic_year) && ($date <= $session->to_academic_year))
+                // {
                     $increment_date = strtotime("+10 day", strtotime($date));
                     $expected_date = date("Y-m-d", $increment_date);
+                // dd($expected_date);
                     // $bookTransaction->book_code = $request->book_code;
                     $issueBook = new StudentBookIssue();
                     $issueBook->bookTransaction_id = $request->BT_id;
@@ -322,10 +323,10 @@ class BookTransactionController extends Controller
                     }
                     $bookStatus = StudentBook::where('book_no', $request->book_code)->update(['book_status' => 0]);
                     return Redirect::back()->with('success', 'Book Issue Successfully');
-                }
-                else{
-                    return Redirect::back()->with('danger', 'BT Card is expired!');
-                }
+                // }
+                // else{
+                //     return Redirect::back()->with('danger', 'BT Card is expired!');
+                // }
             }
             else{
                 return Redirect::back()->with('danger', 'Book is not available!');
@@ -387,6 +388,7 @@ class BookTransactionController extends Controller
         $date1 = $request->return_date; 
         $date2 = $lastIssueBook->expected_return_date;
          
+        // return $date2;
         if($date1 > $date2)
         {
             $diff = strtotime($date2) - strtotime($date1); 
@@ -448,6 +450,33 @@ class BookTransactionController extends Controller
             $book = DB::table('student_book_issue_dates')->where('id', $lastIssueBook->id)->update(['penalty_days' => 0]); 
         }
         $renewBook->save();
+    }
+    
+    public function studentBookIssueFormUpdateDate(Request $request)
+    {
+        $bookDate = StudentBookIssueDate::where('id', $request->ID)->first();
+        $updateDate = StudentBookIssueDate::where('id', $request->ID)->update(['issue_date' => $request->issue_date, 'expected_return_date' => $request->ex_return_date]);
+        $lastIssueBookArray = StudentBookIssueDate::where('student_book_issue_id', $bookDate->student_book_issue_id)->where('id', '<', $bookDate->id)->limit(1)->get();
+        if(count($lastIssueBookArray) > 0){
+        foreach($lastIssueBookArray as $l)
+        {
+            $array[] = $l;
+        }
+        $lastIssueBook = end($array);
+        $convertDate = strtotime($request->issue_date);
+        $convertedDate = date("Y-m-d", $convertDate);
+        if($convertedDate > $lastIssueBook->expected_return_date)
+        {
+            $diff = strtotime($convertedDate) - strtotime($lastIssueBook->expected_return_date); 
+            $days = abs(round($diff / 86400));
+            $book = DB::table('student_book_issue_dates')->where('id', $lastIssueBook->id)->update(['penalty_days' => $days]);
+        }
+        else{
+            $book = DB::table('student_book_issue_dates')->where('id', $lastIssueBook->id)->update(['penalty_days' => 0]); 
+        }
+        }
+        return $lastIssueBookArray;
+        
     }
 
 }

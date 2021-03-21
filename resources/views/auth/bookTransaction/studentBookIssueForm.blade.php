@@ -5,12 +5,14 @@
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <link href="{{ asset('adminAsset/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
 $(document).ready(function(){
   $("#searchButton").click(function(){
     $("#searchForm").toggle();
   });
 });
+
 </script>
 <style>
 #searchForm{
@@ -23,13 +25,13 @@ $(document).ready(function(){
 <div class="container-fluid">
   @if ($message = Session::get('success'))
   <div class="alert alert-success alert-block mt-4">
-    <button type="button" class="close" data-dismiss="alert">×</button>	
+    <button type="button" class="close" data-dismiss="alert">×</button> 
     <strong>{{ $message }}</strong>
   </div>
   @endif
   @if ($message = Session::get('danger'))
   <div class="alert alert-danger alert-block mt-4">
-    <button type="button" class="close" data-dismiss="alert">×</button>	
+    <button type="button" class="close" data-dismiss="alert">×</button> 
     <strong>{{ $message }}</strong>
   </div>
   @endif
@@ -45,7 +47,7 @@ $(document).ready(function(){
     </div>
   </div>
   <div id="searchForm">
-  <section class="py-5">
+  <section class="py-5" >
     <div class="row">
       <div class="col-md-3">
         <div class="form-group">
@@ -89,7 +91,7 @@ $(document).ready(function(){
   <section>
     <div id="bookRecord"></div>
   </section>
-</div>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <div class="card shadow mb-4">
@@ -153,6 +155,15 @@ $(document).ready(function(){
                   @enderror
                 </div>
                 <div class="form-group" id="book_name">
+                </div>
+                <div class="form-group ">
+                  <label>Issue Date</label>
+                  <input type="date" class="form-control form-control-user @error('issue_date') is-invalid @enderror" id="issue_date" name="issue_date" placeholder="Enter Issue Date" value="{{ old('issue_date') }}">
+                  @error('issue_date')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
                 </div>
                 <input type="hidden" name="category" value="p">
                 <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
@@ -317,6 +328,15 @@ $(document).ready(function(){
                 </div>
                 <div class="form-group" id="general_book_name">
                 </div>
+                <div class="form-group ">
+                  <label>Issue Date</label>
+                  <input type="date" class="form-control form-control-user @error('issue_date') is-invalid @enderror" name="issue_date" placeholder="Enter Issue Date" value="{{ old('issue_date') }}">
+                  @error('issue_date')
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                  </span>
+                  @enderror
+                </div>
                 <input type="hidden" name="category" value="g">
                 <input type="hidden" name="BT_id" value="{{ $BT_no->id }}">
                 <input type="hidden" name="BT_no" value="{{ $BT_no->BT_no }}">
@@ -379,8 +399,9 @@ $(document).ready(function(){
                     <table width="100%">
                       @foreach($issueDates as $i)
                       <tr>
-                        <td>{{ $i->issue_date }}</td>
-                        <td>{{ $i->expected_return_date }}</td>
+                        <td><input type="date" class="form-control issue_date" value="{{ $i->issue_date }}"></td>
+                        <td><input type="date" class="form-control ex_return_date" value="{{ $i->expected_return_date }}"></td>
+                        <td><button type="button" class="btn btn-primary btn-sm updateDate" data-id="{{ $i->id }}">Update</button></td>
                       </tr>
                       @endforeach
                     </table>
@@ -595,54 +616,79 @@ $(document).ready(function () {
 <script>
 $(document).on('click', '.update', function(){
     var $row = $(this).closest("tr");
-		var issueID = $row.find(".update").data('id');
-		var return_date = $row.find(".end_date").val();
+    var issueID = $row.find(".update").data('id');
+    var return_date = $row.find(".end_date").val();
     // alert(return_date);
     var book_status = [];
-		// Initializing array with Checkbox checked values
-		$row.find("input[name='book_status']:checked").each(function(){
-			book_status.push(this.value);
-		});
+    // Initializing array with Checkbox checked values
+    $row.find("input[name='book_status']:checked").each(function(){
+      book_status.push(this.value);
+    });
     
-			// alert(book_status);
+      // alert(book_status);
     if(issueID != ''){
-		$.ajax({
-			url: "{{ route('admin.studentBookIssue.update') }}",
-			method: "POST",
-			data: {issueID:issueID, return_date:return_date, book_status:book_status},
-			success: function(data){
+    $.ajax({
+      url: "{{ route('admin.studentBookIssue.update') }}",
+      method: "POST",
+      data: {issueID:issueID, return_date:return_date, book_status:book_status},
+      success: function(data){
+          console.log(data);
         Swal.fire(
           'Book Returned Successfully!',
           )
         setTimeout(() => {
             location.reload();
         }, 1000);
-			}
-		});
-		}
+      }
+    });
+    }
 });
 </script>
 <script>
 $(document).on('click', '.renew', function(){
     var $row = $(this).closest("tr");
     // $row.find(".nr").
-		var issueID = $row.find(".renew").data('id');
+    var issueID = $row.find(".renew").data('id');
     // alert(issueID);
     if(issueID != ''){
-		$.ajax({
-			url: "{{ route('admin.studentBookIssue.renew') }}",
-			method: "POST",
-			data: {issueID:issueID},
-			success: function(data){
+    $.ajax({
+      url: "{{ route('admin.studentBookIssue.renew') }}",
+      method: "POST",
+      data: {issueID:issueID},
+      success: function(data){
         Swal.fire(
           'Book Renew Successfully!',
           )
           setTimeout(() => {
               location.reload();
           }, 2000);
-			}
-		});
-		}
+      }
+    });
+    }
 });
+
+$(document).on('click', '.updateDate', function(){
+    var $row = $(this).closest("tr");
+    var ID = $row.find(".updateDate").data('id');
+    var issue_date = $row.find(".issue_date").val();
+    var ex_return_date = $row.find(".ex_return_date").val();
+    $.ajax({
+    url: "{{ route('admin.studentBookIssue.updateDate') }}",
+    method: "POST",
+    data: {ID:ID, issue_date:issue_date, ex_return_date:ex_return_date},
+    success: function(data){
+        console.log(data);
+    Swal.fire(
+      'Record Updated Successfully!',
+      )
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+    }
+  });
+    
+})
+
 </script>
+
 @endsection

@@ -257,7 +257,9 @@ class LibraryBookController extends Controller
                         "status"=>$importData[15],
                         "department"=>$importData[16],
                         "medium"=>$importData[17],
-                        "remark"=>$importData[18]);
+                        "remark"=>$importData[18],
+                        "status"=>1,
+                    );
                      LibraryBook::insertData($insertData);
          
                    }

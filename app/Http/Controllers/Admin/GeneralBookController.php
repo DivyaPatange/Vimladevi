@@ -10,6 +10,7 @@ use App\Admin\Publication;
 use App\Admin\Seller;
 use App\Admin\RackWing;
 use App\Admin\Department;
+use Session;
 
 class GeneralBookController extends Controller
 {
@@ -195,7 +196,7 @@ class GeneralBookController extends Controller
             $valid_extension = array("csv");
          
             // 2MB in Bytes
-            $maxFileSize = 7097152; 
+            // $maxFileSize = 7097152; 
          
             // Check file extension
             if(in_array(strtolower($extension),$valid_extension))
@@ -254,7 +255,9 @@ class GeneralBookController extends Controller
                         "status"=>$importData[15],
                         "department"=>$importData[16],
                         "medium"=>$importData[17],
-                        "remark"=>$importData[18]);
+                        "remark"=>$importData[18],
+                        "status"=> 1,
+                    );
                     StudentBook::insertData($insertData);
                 }
                 Session::flash('success','Import Successful.');

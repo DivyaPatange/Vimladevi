@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/clear-cache', function () {
     $exitCode = Artisan::call('config:clear');
     $exitCode = Artisan::call('cache:clear');
@@ -79,6 +78,7 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('can:admi
     Route::get('/studentBookIssueForm/{id}', 'BookTransactionController@studentBookIssueForm')->name('studentBookIssueForm');
     Route::post('/studentBookIssueForm/submit', 'BookTransactionController@studentBookIssueFormSubmit')->name('studentBookIssueForm.submit');
     Route::post('/studentBookIssueForm/update', 'BookTransactionController@studentBookIssueFormUpdate')->name('studentBookIssue.update');
+    Route::post('/studentBookIssueForm/updateDate', 'BookTransactionController@studentBookIssueFormUpdateDate')->name('studentBookIssue.updateDate');
     Route::resource('/computerAccession', 'ComputerAccessionController');
     Route::post('/updateComputerAccessionTime', 'ComputerAccessionController@updateComputerAccessionTime')->name('computerAccession.updatetime');
     Route::resource('/departmentLibrary', 'DepartmentLibraryController');
