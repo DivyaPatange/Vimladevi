@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStudentBtIdColumn extends Migration
+class AddAcademicColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddStudentBtIdColumn extends Migration
     public function up()
     {
         Schema::table('book_transactions', function($table){
-            $table->integer('student_bt_id')->nullable()->after('BT_no');
+            $table->unsignedInteger('academic_id')->nullable();
+            $table->foreign('academic_id')->references('id')->on('academic_years');
         });
     }
 
@@ -25,8 +26,6 @@ class AddStudentBtIdColumn extends Migration
      */
     public function down()
     {
-        Schema::table('book_transactions', function($table){
-            $table->dropColumn('student_bt_id');
-        });
+        //
     }
 }

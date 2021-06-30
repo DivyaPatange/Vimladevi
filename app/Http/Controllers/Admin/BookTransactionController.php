@@ -71,10 +71,10 @@ class BookTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'BT_no' => 'required',
-        ]);
-        $studentBT = StudentBT::where('BT_no', $request->BT_no)->where('class_year', $request->class_year)->first();
+        // $request->validate([
+        //     'BT_no' => 'required',
+        // ]);
+        $studentBT = StudentBT::where('BT_no', $request->BT_no)->where('class_year', $request->class_year)->where('session', $request->academic_id)->first();
         // dd($studentBT);
         $session = AcademicYear::where('id', $studentBT->session)->first();
         $date = date('Y/m/d H:i:s');
@@ -83,19 +83,17 @@ class BookTransactionController extends Controller
             $bookTransaction = BookTransaction::where('student_bt_id', $studentBT->id)->first();
             // dd($bookTransaction);
             if(empty($bookTransaction)){
-            // $increment_date = strtotime("+7 day", strtotime($date));
-            // $expected_date = date("Y-m-d", $increment_date);
-            $bookTransaction = new BookTransaction();
-            $bookTransaction->BT_no = $request->BT_no;
-            $bookTransaction->class_year = $request->class_year;
-            $bookTransaction->student_bt_id = $studentBT->id;
-            // $bookTransaction->issue_date = $date;
-            // $bookTransaction->expected_return_date = $expected_date;/
-            $bookTransaction->save();
-            return redirect('/admin/bookTransaction')->with('success', 'Book Issue Successfully!');
+                $bookTransaction = new BookTransaction();
+                $bookTransaction->BT_no = $request->BT_no;
+                $bookTransaction->class_year = $request->class_year;
+                $bookTransaction->student_bt_id = $studentBT->id;
+                // $bookTransaction->issue_date = $date;
+                // $bookTransaction->expected_return_date = $expected_date;/
+                $bookTransaction->save();
+                return response()->json(['success' => 'Book Issue Successfully!']);
             }
             else{
-                return redirect('/admin/bookTransaction')->with('danger', 'BT Card is already registered!');
+                return response()->json(['error' => 'BT Card is already registered!']);
             }
         // }
         // else{
@@ -154,6 +152,7 @@ class BookTransactionController extends Controller
             // select country name from database
             $data = StudentBT::where('BT_no', 'LIKE', $request->BT_no.'%')
             ->where('class_year', 'LIKE', $request->class_year.'%')
+            ->where('session', $request->academic_id)
             ->get();
                 
         

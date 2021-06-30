@@ -25,6 +25,8 @@ class AddDesignationColumn extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('faculty_b_t_s', function($table){
+            $table->dropColumn('designation');
+        });
     }
 }

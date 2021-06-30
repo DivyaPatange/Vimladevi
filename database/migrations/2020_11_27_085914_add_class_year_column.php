@@ -25,6 +25,8 @@ class AddClassYearColumn extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('book_transactions', function($table){
+            $table->dropColumn('class_year');
+        });
     }
 }
