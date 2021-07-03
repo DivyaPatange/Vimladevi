@@ -12,13 +12,13 @@
 <div class="container-fluid">
   @if ($message = Session::get('success'))
   <div class="alert alert-success alert-block mt-4">
-    <button type="button" class="close" data-dismiss="alert">×</button>	
+    <button type="button" class="close" data-dismiss="alert">×</button> 
           <strong>{{ $message }}</strong>
   </div>
   @endif
   @if ($message = Session::get('danger'))
   <div class="alert alert-danger alert-block mt-4">
-    <button type="button" class="close" data-dismiss="alert">×</button>	
+    <button type="button" class="close" data-dismiss="alert">×</button> 
           <strong>{{ $message }}</strong>
   </div>
   @endif
@@ -130,6 +130,7 @@
               <th>BT Card No.</th>
               <th>Class Year</th>
               <th>Student Name</th>
+              <th>Academic Session</th>
               <th>Issue Book</th>
           </thead>
           <tfoot>
@@ -138,6 +139,7 @@
             <th>BT Card No.</th>
             <th>Class Year</th>
             <th>Student Name</th>
+            <th>Academic Session</th>
             <th>Issue Book</th>
             </tr>
           </tfoot>
@@ -223,6 +225,7 @@ $(document).ready(function(){
     { data: 'BT_no', name: 'BT_no' },
     { data: 'class_year', name: 'class_year' },
     { data: 'name', name: 'name' },
+    { data: 'session', name: 'session' },
     {data: 'action', name: 'action', orderable: false},
     ],
     order: [[0, 'asc']],

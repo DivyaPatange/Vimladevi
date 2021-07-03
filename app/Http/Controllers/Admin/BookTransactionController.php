@@ -45,6 +45,12 @@ class BookTransactionController extends Controller
                 // dd($data);
             }
             return datatables()->of($data)
+            ->addColumn('session', function($row){
+                $academicYear = AcademicYear::where('id', $row->session)->first();
+                if(!empty($academicYear)){
+                    return '('.date('d-m-Y', strtotime($academicYear->from_academic_year)).') - ('.date('d-m-Y', strtotime($academicYear->to_academic_year)).')';
+                }
+            })
             ->addColumn('action', 'auth.bookTransaction.action')
             ->rawColumns(['name', 'action'])
             ->addIndexColumn()
